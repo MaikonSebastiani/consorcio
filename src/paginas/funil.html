@@ -66,6 +66,7 @@
   .estrategia ol { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 8px; }
   .estrategia li::marker { color: var(--ouro); font-weight: 800; }
   .estrategia .perda { font-size: 1.4rem; }
+  .media { display: inline-block; margin: 6px 0 10px; padding: 6px 12px; border-radius: 8px; background: var(--ouro-fundo); border: 1px solid #6b5a30; color: var(--ouro-claro); font-weight: 800; font-size: .92rem; }
   .confirmacao { border-color: #4d7363; }
   .confirmacao h3 { color: var(--salvia); }
   .legal { margin-top: 16px; }
@@ -405,28 +406,30 @@ function cartaoEstrategia(r, carta) {
   const texto = el("div");
   const lista = el("ol");
   passosLance.forEach(p => lista.append(el("li", "", p)));
-  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), el("p", "suave", "Personalizada para buscar a contemplação mais cedo, com acompanhamento do início ao fim."), lista);
+  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), ...(plano.media ? [el("div", "media", `Média de ${plano.media} até a contemplação nessa estratégia`)] : []), el("p", "suave", "Personalizada para buscar a contemplação mais cedo, com acompanhamento do início ao fim."), lista);
 
   const numeros = el("div");
   numeros.append(el("h3", "", "Lance que você pode montar"), el("p", "pequeno suave", plano.total ? `Cerca de ${reais(plano.valorTotal)} sobre a carta de ${reais(carta)}` : "Hoje a sua chance vem do sorteio"));
   numeros.append(barras([{ rotulo: "Seu lance possível", valor: plano.total * 100, texto: `${Math.round(plano.total * 100)}%`, detalhe: `Lance possível: ${Math.round(plano.total * 100)}% da carta` }]));
-  numeros.append(el("p", "pequeno suave legal", "Estimativa. O resultado de cada assembleia depende dos lances ofertados, e nenhuma estratégia garante contemplação."));
+  numeros.append(el("p", "pequeno suave legal", `Estimativa. ${plano.media ? "Médias de referência, não são promessa de prazo. " : ""}O resultado de cada assembleia depende dos lances ofertados, e nenhuma estratégia garante contemplação.`));
   c.append(texto, numeros);
   return c;
 }
 
-function cartaoEspera(chances) {
+function cartaoEspera(chances, carta) {
   const c = el("div", "cartao metade");
   c.append(el("h3", "", "O que você perde deixando para depois"));
+  const { media } = planoDeLance(produto, carta, respostas.reserva);
   const textoChances = `Cada mês fora do consórcio é uma assembleia em que você não concorre: nem pelo sorteio, nem com a estratégia de lance e o acompanhamento de ${CONFIG.consultor}. Quem entra daqui a 1 ano perde ${chances} chances.`;
+  const textoMedia = media && `Na sua estratégia, a média de referência é de ${media} até a contemplação. Adiar 1 ano faz essa contagem começar 12 meses depois.`;
   if (produto === "carro") {
-    c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances));
+    c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []));
     return c;
   }
   const aluguelAno = (respostas.aluguel || 0) * 12;
   const alta = respostas.valor * dados.altaAnual;
   const partes = [aluguelAno && `${reais(aluguelAno)} de aluguel`, `${reais(alta)} de alta do imóvel, se subir ${Math.round(dados.altaAnual * 100)}% no ano`].filter(Boolean);
-  c.append(el("div", "perda", `${chances} chances e ${reais(aluguelAno + alta)} a menos`), el("p", "suave", textoChances), el("p", "suave", `Em 12 meses de espera, são ${partes.join(" e ")}.`));
+  c.append(el("div", "perda", `${chances} chances e ${reais(aluguelAno + alta)} a menos`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []), el("p", "suave", `Em 12 meses de espera, são ${partes.join(" e ")}.`));
   return c;
 }
 
@@ -454,7 +457,7 @@ function telaResultado() {
   comparativo.append(el("h3", "", "Consórcio ou financiamento?"), el("p", "pequeno suave", `Custo total estimado para a carta de ${reais(carta)}`), barrasCusto(r), tabelaPlano(r, carta));
   painel.append(comparativo, cartaoEstrategia(r, carta));
 
-  const espera = cartaoEspera(chances);
+  const espera = cartaoEspera(chances, carta);
 
   const proximo = el("div", "cartao metade confirmacao");
   proximo.append(el("h3", "", "Recebemos seu plano"), el("p", "suave", `${CONFIG.consultor} vai chamar você no WhatsApp para mostrar as opções disponíveis.`));

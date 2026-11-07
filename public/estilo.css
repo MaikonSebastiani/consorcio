@@ -95,3 +95,6 @@ tbody th { color: var(--suave); font-weight: 700; }
 
 .previa-painel .cartao, .previa-painel .indicador { background: rgba(33, 36, 41, .58); backdrop-filter: blur(3px); }
 .previa-painel .indicador.destaque { background: rgba(51, 48, 42, .58); }
+
+.destaque-media { margin-top: 12px; color: var(--ouro-claro); font-weight: 800; font-size: .92rem; }
+.nota-media { margin-top: 10px; }

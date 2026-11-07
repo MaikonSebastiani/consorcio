@@ -133,7 +133,7 @@ function rodape() {
   const documento = CONFIG.documento ? ` · ${escapar(CONFIG.documento)}` : "";
   return `<footer class="rodape"><div>
   <p><strong>${escapar(CONFIG.consultor)}</strong>${documento} · Consultor ${escapar(CONFIG.administradora)}${contatos ? ` · ${contatos}` : ""}</p>
-  <p>Consórcio administrado pela ${escapar(CONFIG.administradora)}. Simulações são estimativas. A contemplação ocorre por sorteio ou lance e não tem data garantida.</p>
+  <p>Consórcio administrado pela ${escapar(CONFIG.administradora)}. Simulações são estimativas. A contemplação ocorre por sorteio ou lance e não tem data garantida. Médias de contemplação são referências, não promessa de prazo.</p>
   <p><a href="/privacidade">Política de privacidade</a></p>
 </div></footer>`;
 }
@@ -144,14 +144,18 @@ function renderizar(rota) {
   const valores = {
     meta: metaTags(rota, pagina),
     aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e cartas de exemplo. Não divulgue esta versão.</div>' : "",
-    conteudo: pagina.conteudo ?? "",
+    conteudo: "",
     rodape: rodape(),
     consultor: escapar(CONFIG.consultor),
     administradora: escapar(CONFIG.administradora),
     documentoTexto: CONFIG.documento ? `, ${escapar(CONFIG.documento)}` : "",
+    mediaHibrido: escapar(CONFIG.mediasContemplacao.hibrido),
+    mediaEmbutido: escapar(CONFIG.mediasContemplacao.embutido),
     contatoPrivacidade: contato || "[preencher e-mail ou telefone em src/config.mjs]",
   };
-  return pagina.modelo.replace(/\{\{(\w+)\}\}/g, (_, chave) => valores[chave] ?? "");
+  const preencher = texto => texto.replace(/\{\{(\w+)\}\}/g, (_, chave) => valores[chave] ?? "");
+  valores.conteudo = preencher(pagina.conteudo ?? "");
+  return preencher(pagina.modelo);
 }
 
 function robots() {

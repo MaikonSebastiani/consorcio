@@ -6,7 +6,7 @@
     <p class="suave">Responda 5 perguntas e receba uma estratégia de lance personalizada para buscar a contemplação mais cedo.</p>
     <button class="botao" data-simular>Descobrir em 60 segundos</button>
     <ul class="provas">
-      <li>Estratégia de lance feita para o seu perfil</li>
+      <li>Lance híbrido: média de {{mediaHibrido}} até a contemplação</li>
       <li>Compara consórcio e financiamento</li>
       <li>Acompanhamento personalizado até a contemplação</li>
       <li>Sem compromisso de compra</li>
@@ -40,8 +40,10 @@
   <div class="cards">
     <div class="cartao"><h3>Sorteio</h3><p class="suave">Quem está com as parcelas em dia concorre nas assembleias, sem custo extra.</p></div>
     <div class="cartao"><h3>Lance livre</h3><p class="suave">Você oferta um valor com recursos próprios. Em geral, vence o maior percentual, e o valor abate o saldo do plano.</p></div>
-    <div class="cartao"><h3>Lance embutido</h3><p class="suave">Parte da própria carta vira lance, sem dinheiro extra na hora. Em troca, o crédito que você recebe diminui. Depende das regras do grupo.</p></div>
+    <div class="cartao"><h3>Lance embutido</h3><p class="suave">Parte da própria carta vira lance, sem dinheiro extra na hora. Em troca, o crédito que você recebe diminui. Depende das regras do grupo.</p><p class="destaque-media">Média de {{mediaEmbutido}} até a contemplação</p></div>
+    <div class="cartao"><h3>Lance híbrido</h3><p class="suave">Combina recursos próprios com parte da carta. É a estratégia com a menor média de contemplação.</p><p class="destaque-media">Média de {{mediaHibrido}} até a contemplação</p></div>
   </div>
+  <p class="pequeno suave nota-media">Médias de referência, não são promessa de prazo. Cada assembleia depende dos lances ofertados.</p>
   <div class="chamada-meio">
     <div>
       <h3>Qual lance combina com o seu perfil?</h3>
@@ -83,7 +85,7 @@
 <section class="secao faq" id="duvidas">
   <h2>Dúvidas sobre consórcio de imóvel</h2>
   <details><summary>Consórcio de imóvel tem juros?</summary><p>Não. O consórcio não cobra juros, mas tem taxa de administração e fundo de reserva, e pode ter seguro. Esses custos aparecem no contrato.</p></details>
-  <details><summary>Quanto tempo demora para ser contemplado?</summary><p>Não dá para prever. A contemplação acontece por sorteio ou lance nas assembleias e pode ocorrer em qualquer momento do plano. Uma estratégia de lance ajuda a buscar esse momento mais cedo, mas não garante data.</p></details>
+  <details><summary>Quanto tempo demora para ser contemplado?</summary><p>Não dá para prever. A contemplação acontece por sorteio ou lance nas assembleias e pode ocorrer em qualquer momento do plano. Como referência, a média é de {{mediaHibrido}} com lance híbrido e de {{mediaEmbutido}} com lance embutido, mas essas médias não garantem data: cada assembleia depende dos lances ofertados.</p></details>
   <details><summary>Preciso dar entrada?</summary><p>Não. Você começa pagando as parcelas. Se quiser, pode guardar um valor para ofertar como lance.</p></details>
   <details><summary>O que posso fazer com a carta de crédito?</summary><p>Depende do contrato. Normalmente ela serve para comprar imóvel residencial ou comercial, e alguns contratos permitem terreno, construção ou reforma. O consultor confirma as regras do seu grupo.</p></details>
   <details><summary>O que é lance embutido?</summary><p>É quando parte da própria carta de crédito é usada como lance. Você não precisa desse dinheiro na hora, mas recebe um crédito menor ao ser contemplado. Nem todo grupo permite.</p></details>

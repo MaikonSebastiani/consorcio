@@ -6,6 +6,9 @@ export default {
   consultor: "Seu Nome",
   administradora: "Ademicon",
 
+  // Médias de contemplação por estratégia, usadas como referência no site. Não são promessa de prazo.
+  mediasContemplacao: { hibrido: "24 meses", embutido: "24 a 36 meses" },
+
   // Aparecem no rodapé e na política de privacidade. Preencha antes de publicar.
   documento: "", // CPF ou CNPJ, se quiser exibir
   email: "",

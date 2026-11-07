@@ -65,9 +65,12 @@ const PERCENTUAL_RESERVA = [["até 10%", 0.1], ["de 10% a 30%", 0.2], ["mais de 
 function planoDeLance(produto, valor, reserva) {
   const proprio = PERCENTUAL_RESERVA.find(([inicio]) => reserva.startsWith(inicio))?.[1] ?? 0;
   const embutido = CONFIG[produto].lanceEmbutidoMax;
-  const nome = proprio && embutido ? "Lance combinado"
+  const nome = proprio && embutido ? "Lance híbrido"
     : proprio ? "Lance livre"
     : embutido ? "Embutido + reserva mensal"
     : "Sorteio + reserva mensal";
-  return { nome, proprio, embutido, total: proprio + embutido, valorProprio: valor * proprio, valorEmbutido: valor * embutido, valorTotal: valor * (proprio + embutido) };
+  // Média de referência só existe para as estratégias que usam parte da carta.
+  const medias = CONFIG.mediasContemplacao ?? {};
+  const media = embutido ? (proprio ? medias.hibrido : medias.embutido) : null;
+  return { nome, media, proprio, embutido, total: proprio + embutido, valorProprio: valor * proprio, valorEmbutido: valor * embutido, valorTotal: valor * (proprio + embutido) };
 }
