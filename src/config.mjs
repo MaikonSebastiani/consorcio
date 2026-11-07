@@ -3,7 +3,8 @@ export default {
   // Mude para false só depois de trocar as taxas e as cartas pelos dados reais do seu gestor.
   modoExemplo: true,
 
-  consultor: "Seu Nome",
+  // Nome que aparece no site, no CRM e na política de privacidade.
+  marca: "Grupo Saitama",
   administradora: "Ademicon",
 
   // Médias de contemplação por estratégia, usadas como referência no site. Não são promessa de prazo.

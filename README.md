@@ -17,7 +17,7 @@ O Worker decide pelo endereço: no `consorcio.gruposaitama.com.br` só abre o CR
 
 ```text
 src/worker.js        rotas, páginas, leads e conferência do Access
-src/config.mjs       consultor, contato, taxas e valores de carta (o navegador recebe em /config.js)
+src/config.mjs       marca, contato, taxas e valores de carta (o navegador recebe em /config.js)
 src/paginas/         modelos HTML das páginas e do CRM
 public/              estilo, scripts, regras compartilhadas e imagens
 migrations/          tabela de leads do D1

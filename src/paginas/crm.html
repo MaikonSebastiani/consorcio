@@ -184,7 +184,7 @@ function telefone(d) {
 }
 
 function linkConversa(l) {
-  const texto = `Oi, ${l.nome}! Aqui é ${CONFIG.consultor}, consultor ${CONFIG.administradora}. Vi sua simulação para ${l.motivo} e separei algumas opções para você.`;
+  const texto = `Oi, ${l.nome}! Aqui é do ${CONFIG.marca}. Vimos sua simulação de consórcio de ${NOME_PRODUTO[l.objetivo].toLowerCase()} e separamos algumas opções para você.`;
   return `https://wa.me/55${l.whatsapp}?text=${encodeURIComponent(texto)}`;
 }
 

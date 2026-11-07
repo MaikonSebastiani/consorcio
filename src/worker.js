@@ -113,7 +113,7 @@ const escapar = v => String(v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&l
 
 function metaTags(rota, { titulo, descricao, imagem }) {
   const tags = [
-    `<title>${escapar(titulo)} | ${escapar(CONFIG.consultor)}</title>`,
+    `<title>${escapar(titulo)} | ${escapar(CONFIG.marca)}</title>`,
     `<meta name="description" content="${escapar(descricao)}">`,
     `<meta property="og:title" content="${escapar(titulo)}">`,
     `<meta property="og:description" content="${escapar(descricao)}">`,
@@ -132,7 +132,7 @@ function rodape() {
   const contatos = [CONFIG.email, CONFIG.telefone].filter(Boolean).map(escapar).join(" · ");
   const documento = CONFIG.documento ? ` · ${escapar(CONFIG.documento)}` : "";
   return `<footer class="rodape"><div>
-  <p><strong>${escapar(CONFIG.consultor)}</strong>${documento} · Consultor ${escapar(CONFIG.administradora)}${contatos ? ` · ${contatos}` : ""}</p>
+  <p><strong>${escapar(CONFIG.marca)}</strong>${documento} · Consultoria em consórcio${contatos ? ` · ${contatos}` : ""}</p>
   <p>Consórcio administrado pela ${escapar(CONFIG.administradora)}. Simulações são estimativas. A contemplação ocorre por sorteio ou lance e não tem data garantida. Médias de contemplação são referências, não promessa de prazo.</p>
   <p><a href="/privacidade">Política de privacidade</a></p>
 </div></footer>`;
@@ -146,7 +146,7 @@ function renderizar(rota) {
     aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e cartas de exemplo. Não divulgue esta versão.</div>' : "",
     conteudo: "",
     rodape: rodape(),
-    consultor: escapar(CONFIG.consultor),
+    marca: escapar(CONFIG.marca),
     administradora: escapar(CONFIG.administradora),
     documentoTexto: CONFIG.documento ? `, ${escapar(CONFIG.documento)}` : "",
     mediaHibrido: escapar(CONFIG.mediasContemplacao.hibrido),

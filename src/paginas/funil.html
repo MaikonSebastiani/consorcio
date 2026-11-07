@@ -89,14 +89,14 @@
 <body>
 {{aviso}}
 <header class="topo">
-  <a class="logo" href="/"><i></i><span>{{consultor}}</span></a>
+  <a class="logo" href="/"><i></i><span>{{marca}}</span></a>
   <nav class="topo-nav" id="navegacao" aria-label="Nesta página">
     <a href="#como-funciona">Como funciona</a>
     <a href="#lance">Lance</a>
     <a href="#comparativo">Comparativo</a>
     <a href="#duvidas">Dúvidas</a>
   </nav>
-  <span class="pequeno suave">Consultor {{administradora}}</span>
+  <span class="pequeno suave">Consultoria em consórcio</span>
 </header>
 <main class="pagina" id="pagina">
 {{conteudo}}
@@ -313,7 +313,7 @@ function telaContato() {
   const consentRotulo = el("label", "consentimento");
   const consent = el("input");
   consent.type = "checkbox";
-  const textoConsent = el("span", "", `Autorizo ${CONFIG.consultor} a falar comigo pelo WhatsApp sobre esta simulação. Posso pedir para sair a qualquer momento. `);
+  const textoConsent = el("span", "", `Autorizo a equipe do ${CONFIG.marca} a falar comigo pelo WhatsApp sobre esta simulação. Posso pedir para sair a qualquer momento. `);
   const politica = el("a", "", "Política de privacidade");
   Object.assign(politica, { href: "/privacidade", target: "_blank", rel: "noopener" });
   textoConsent.append(politica);
@@ -399,7 +399,7 @@ function cartaoEstrategia(r, carta) {
       : `Comece pelo sorteio e guarde ${reais(guardar)} por mês: em 12 meses são ${reais(guardar * 12)} para o lance.`,
     plano.embutido && `Some até ${reais(plano.valorEmbutido)} de lance embutido, se o plano permitir. Essa parte sai da carta, então o crédito que você recebe diminui.`,
     "Concorra desde a primeira assembleia: quanto antes você entra, mais chances tem de ser contemplado.",
-    `${CONFIG.consultor} acompanha os resultados das assembleias com você e ajusta o lance ao longo do plano.`,
+    "Acompanhamos os resultados das assembleias com você e ajustamos o lance ao longo do plano.",
   ].filter(Boolean);
 
   const c = el("div", "cartao inteiro estrategia");
@@ -420,7 +420,7 @@ function cartaoEspera(chances, carta) {
   const c = el("div", "cartao metade");
   c.append(el("h3", "", "O que você perde deixando para depois"));
   const { media } = planoDeLance(produto, carta, respostas.reserva);
-  const textoChances = `Cada mês fora do consórcio é uma assembleia em que você não concorre: nem pelo sorteio, nem com a estratégia de lance e o acompanhamento de ${CONFIG.consultor}. Quem entra daqui a 1 ano perde ${chances} chances.`;
+  const textoChances = `Cada mês fora do consórcio é uma assembleia em que você não concorre: nem pelo sorteio, nem com a estratégia de lance e o nosso acompanhamento. Quem entra daqui a 1 ano perde ${chances} chances.`;
   const textoMedia = media && `Na sua estratégia, a média de referência é de ${media} até a contemplação. Adiar 1 ano faz essa contagem começar 12 meses depois.`;
   if (produto === "carro") {
     c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []));
@@ -460,7 +460,7 @@ function telaResultado() {
   const espera = cartaoEspera(chances, carta);
 
   const proximo = el("div", "cartao metade confirmacao");
-  proximo.append(el("h3", "", "Recebemos seu plano"), el("p", "suave", `${CONFIG.consultor} vai chamar você no WhatsApp para mostrar as opções disponíveis.`));
+  proximo.append(el("h3", "", "Recebemos seu plano"), el("p", "suave", "Vamos chamar você no WhatsApp para mostrar as opções disponíveis."));
   painel.append(espera, proximo);
 
   app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. A contemplação ocorre por sorteio ou lance e não tem data garantida. A estratégia de lance é uma sugestão e não garante contemplação. Taxas, prazos e condições são confirmados no contrato da ${CONFIG.administradora}.${P.aviso}`));
