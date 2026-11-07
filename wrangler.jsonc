@@ -11,7 +11,7 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
-  "rules": [{ "type": "Text", "globs": ["**/*.html"], "fallthrough": true }],
+  "rules": [{ "type": "Text", "globs": ["**/*.html", "**/*.css", "**/ui.js"], "fallthrough": true }],
   "d1_databases": [
     {
       "binding": "DB",

@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {{meta}}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/estilo.css">
+{{estilo}}
 <style>
   .topo { position: relative; z-index: 2; max-width: 1080px; height: 72px; margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
   #app { max-width: 1080px; margin: 0 auto; padding: 8px 16px 0; }
@@ -27,7 +25,8 @@
   .capa h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin: 14px 0 16px; }
   .capa .botao { max-width: 320px; margin-top: 24px; }
   .provas { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 8px; color: #d6d7da; font-size: .92rem; }
-  .provas li::before { content: "◆"; color: var(--ouro); font-size: .62rem; margin-right: 10px; vertical-align: 2px; }
+  .provas li { display: flex; gap: 10px; align-items: baseline; }
+  .provas li::before { content: "◆"; flex: none; color: var(--ouro); font-size: .62rem; transform: translateY(-1px); }
   .previa-painel { display: grid; gap: 12px; padding: 16px; background: rgba(22, 24, 27, .06); border: 1px dashed var(--neutro); border-radius: 18px; }
   .previa-aviso { display: grid; gap: 8px; justify-items: start; margin-bottom: 4px; }
   .selo-exemplo { background: var(--ouro); color: #1a1710; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; }
@@ -40,8 +39,19 @@
   .estreito h2 { font-size: 1.6rem; margin-bottom: 20px; }
   .opcao { display: block; width: 100%; text-align: left; background: var(--painel); border: 1px solid var(--linha); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; font-weight: 700; cursor: pointer; transition: border-color .15s, background .15s; }
   .opcao:hover { border-color: var(--ouro); background: var(--painel-alto); }
+  .opcao:active { transform: scale(.98); }
   .valor-grande { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; color: var(--ouro-claro); margin: 8px 0; font-variant-numeric: tabular-nums; }
-  input[type=range] { width: 100%; accent-color: var(--ouro); height: 32px; margin-bottom: 20px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 4px 0 10px; background: transparent; --pct: 50%; }
+  input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--ouro) var(--pct), var(--painel-alto) var(--pct)); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -12px; border-radius: 50%; background: var(--ouro-claro); border: 4px solid var(--ouro); box-shadow: 0 2px 10px rgba(0, 0, 0, .45); }
+  input[type=range]::-moz-range-track { height: 6px; border-radius: 6px; background: var(--painel-alto); }
+  input[type=range]::-moz-range-progress { height: 6px; border-radius: 6px; background: var(--ouro); }
+  input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--ouro-claro); border: 4px solid var(--ouro); }
+  .atalhos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+  .atalhos button { min-height: 44px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--linha); background: var(--painel); font-weight: 700; font-size: .9rem; cursor: pointer; }
+  .atalhos button[aria-pressed=true] { border-color: var(--ouro); background: var(--ouro-fundo); color: var(--ouro-claro); }
+  .atalhos button:active { transform: scale(.97); }
+  body.simulando .rodape { display: none; }
   .voltar { display: block; width: 100%; background: none; border: 0; color: var(--suave); padding: 14px; cursor: pointer; font-size: .92rem; }
   .voltar:hover { color: var(--tinta); }
 
@@ -77,12 +87,24 @@
     body.com-barra .rodape { padding-bottom: 72px; }
     .capa { padding: 150px 0 40px; }
     .capa::before { background-size: auto 340px; background-position: right top; opacity: .5; }
+    .capa-carro::before { background-image: url(/img/hero-carro-celular.webp); }
+    .capa-imovel::before { background-image: url(/img/hero-imovel-celular.webp); }
     .capa::after { background: linear-gradient(180deg, transparent 0, transparent 150px, var(--fundo) 330px); }
     .capa-grade { grid-template-columns: minmax(0, 1fr); gap: 32px; }
     .capa .botao { max-width: none; }
     .passos { grid-template-columns: 1fr; }
     .metade, .sete, .cinco { grid-column: span 12; }
     .estrategia { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .pagina > .passos { width: auto; margin-inline: 0; }
+    .atalhos { grid-template-columns: 1fr 1fr; }
+    #app .indicadores { grid-template-columns: 1fr 1fr; gap: 8px; }
+    #app .indicador { padding: 12px 14px; }
+    #app .indicador .valor { font-size: 1.25rem; }
+    #app .indicador .nota { font-size: .74rem; }
+    .painel-topo h2 { font-size: 1.5rem; }
+    .perda { font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -105,8 +127,7 @@
 {{rodape}}
 <div class="barra-cta" id="barraCta" hidden><button class="botao" data-simular>Simular agora</button></div>
 
-<script src="/config.js"></script>
-<script src="/ui.js"></script>
+{{scripts}}
 <script type="module">import { cartaIndicada, erroCelular } from "/regras.mjs"; Object.assign(window, { cartaIndicada, erroCelular });</script>
 <script>
 const app = document.getElementById("app");
@@ -131,8 +152,8 @@ const PRODUTOS = {
         ["ter um carro para trabalhar", "Ter um carro para trabalhar"],
         ["comprar um carro para a família", "Comprar um carro para a família"],
       ]},
-      { id: "valor", titulo: "Quanto custa o carro que você quer?", min: 40000, max: 300000, passo: 5000, inicial: 90000 },
-      { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 300, max: 5000, passo: 50, inicial: 1000 },
+      { id: "valor", titulo: "Quanto custa o carro que você quer?", min: 40000, max: 300000, passo: 5000, inicial: 90000, atalhos: [60000, 90000, 120000, 180000] },
+      { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 300, max: 5000, passo: 50, inicial: 1000, atalhos: [800, 1200, 1800, 2500] },
       { id: "reserva", titulo: "Você tem algum valor guardado para dar de lance?", opcoes: [
         ["nenhum", "Ainda não tenho"],
         ["até 10% do carro", "Até 10% do valor do carro"],
@@ -155,9 +176,9 @@ const PRODUTOS = {
         ["investir em imóvel", "Investir em imóvel"],
         ["construir minha casa", "Construir minha casa"],
       ]},
-      { id: "valor", titulo: "Quanto custa o imóvel que você quer?", min: 150000, max: 1500000, passo: 10000, inicial: 350000 },
-      { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 500, max: 15000, passo: 100, inicial: 2000 },
-      { id: "aluguel", titulo: "Quanto você paga de aluguel hoje?", min: 0, max: 10000, passo: 100, inicial: 1500, zero: "Não pago aluguel" },
+      { id: "valor", titulo: "Quanto custa o imóvel que você quer?", min: 150000, max: 1500000, passo: 10000, inicial: 350000, atalhos: [250000, 350000, 500000, 800000] },
+      { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 500, max: 15000, passo: 100, inicial: 2000, atalhos: [1500, 2500, 4000, 6000] },
+      { id: "aluguel", titulo: "Quanto você paga de aluguel hoje?", min: 0, max: 10000, passo: 100, inicial: 1500, zero: "Não pago aluguel", atalhos: [0, 1000, 2000, 3500] },
       { id: "reserva", titulo: "Você tem algum valor guardado para dar de lance?", opcoes: [
         ["nenhum", "Ainda não tenho"],
         ["até 10% do imóvel", "Até 10% do valor do imóvel"],
@@ -198,6 +219,7 @@ function barrasCusto(r) {
 }
 
 function mostrarSimulacao() {
+  document.body.classList.add("simulando");
   pagina.hidden = true;
   document.getElementById("navegacao").hidden = true;
   barraCta.hidden = true;
@@ -205,6 +227,7 @@ function mostrarSimulacao() {
 }
 
 function mostrarPagina() {
+  document.body.classList.remove("simulando");
   app.hidden = true;
   pagina.hidden = false;
   document.getElementById("navegacao").hidden = false;
@@ -265,10 +288,24 @@ function telaPasso(indice) {
     const faixa = el("input");
     Object.assign(faixa, { type: "range", min: passo.min, max: passo.max, step: passo.passo, value: atual });
     faixa.setAttribute("aria-label", passo.titulo);
-    faixa.oninput = () => { mostrador.textContent = formatar(Number(faixa.value)); };
+    const atalhos = el("div", "atalhos");
+    const atualizar = () => {
+      const valor = Number(faixa.value);
+      mostrador.textContent = formatar(valor);
+      faixa.style.setProperty("--pct", `${(valor - passo.min) / (passo.max - passo.min) * 100}%`);
+      atalhos.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.value) === valor));
+    };
+    passo.atalhos.forEach(valor => {
+      const atalho = el("button", "", formatar(valor));
+      Object.assign(atalho, { type: "button", value: valor });
+      atalho.onclick = () => { faixa.value = valor; atualizar(); };
+      atalhos.append(atalho);
+    });
+    faixa.oninput = atualizar;
     const botao = el("button", "botao", "Continuar");
     botao.onclick = () => { respostas[passo.id] = Number(faixa.value); avancar(); };
-    app.append(mostrador, faixa, botao);
+    app.append(mostrador, faixa, atalhos, botao);
+    atualizar();
   }
 
   const voltar = el("button", "voltar", "Voltar");
@@ -289,12 +326,12 @@ function telaContato() {
   form.noValidate = true;
   const nomeRotulo = el("label", "", "Seu nome");
   const nome = el("input");
-  Object.assign(nome, { type: "text", autocomplete: "given-name" });
+  Object.assign(nome, { type: "text", autocomplete: "given-name", autocapitalize: "words", enterKeyHint: "next" });
   nomeRotulo.append(nome);
 
   const foneRotulo = el("label", "", "Seu celular com WhatsApp");
   const fone = el("input");
-  Object.assign(fone, { type: "tel", autocomplete: "tel", inputMode: "numeric", placeholder: "(11) 91234-5678" });
+  Object.assign(fone, { type: "tel", autocomplete: "tel", inputMode: "numeric", enterKeyHint: "done", placeholder: "(11) 91234-5678" });
   const digitosFone = () => fone.value.replace(/\D/g, "");
   const marcarFone = mensagem => {
     fone.setAttribute("aria-invalid", Boolean(mensagem));
@@ -434,6 +471,7 @@ function cartaoEspera(chances, carta) {
 }
 
 function telaResultado() {
+  document.body.classList.remove("simulando");
   app.className = "";
   const carta = cartaIndicada(dados.cartas, respostas.valor);
   const r = calcular(carta, respostas.parcela);

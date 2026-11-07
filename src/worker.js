@@ -6,6 +6,8 @@ import paginaPrivacidade from "./paginas/privacidade.html";
 import paginaCrm from "./paginas/crm.html";
 import conteudoCarro from "./paginas/conteudo-carro.html";
 import conteudoImovel from "./paginas/conteudo-imovel.html";
+import estiloCss from "../public/estilo.css";
+import uiJs from "../public/ui.js";
 
 const STATUS = ["novo", "contato", "negociando", "vendido", "perdido"];
 const PRODUTOS = ["carro", "imovel"];
@@ -20,6 +22,7 @@ const PAGINAS = {
     modelo: paginaFunil,
     conteudo: conteudoCarro,
     imagem: "/img/hero-carro.webp",
+    imagemCelular: "/img/hero-carro-celular.webp",
     titulo: "Consórcio de carro: simule parcela e estratégia de lance",
     descricao: "Simule seu consórcio de carro, compare com o financiamento e receba uma estratégia de lance personalizada em 60 segundos.",
   },
@@ -27,6 +30,7 @@ const PAGINAS = {
     modelo: paginaFunil,
     conteudo: conteudoImovel,
     imagem: "/img/hero-imovel.webp",
+    imagemCelular: "/img/hero-imovel-celular.webp",
     titulo: "Consórcio de imóvel: simule parcela e estratégia de lance",
     descricao: "Simule seu consórcio de imóvel, veja quanto a espera pesa no bolso e receba uma estratégia de lance personalizada em 60 segundos.",
   },
@@ -75,7 +79,7 @@ async function rotear(request, env) {
   }
   if (noCrm) {
     // No endereço do CRM só passam os arquivos de estilo e script.
-    return /^\/(estilo\.css|ui\.js|regras\.mjs)$/.test(caminho) ? env.ASSETS.fetch(request) : json({ erro: "Não encontrado." }, 404);
+    return /^\/(estilo\.css|ui\.js|regras\.mjs|fonts\/[\w.-]+\.woff2)$/.test(caminho) ? arquivoEstatico(request, env, caminho) : json({ erro: "Não encontrado." }, 404);
   }
 
   if (metodo === "GET" && PAGINAS[caminho]) return html(renderizar(caminho));
@@ -83,7 +87,19 @@ async function rotear(request, env) {
   if (metodo === "GET" && caminho === "/robots.txt") return texto(robots(), "text/plain");
   if (metodo === "GET" && caminho === "/sitemap.xml" && CONFIG.siteUrl) return texto(sitemap(), "application/xml");
   if (caminho.startsWith("/api/")) return json({ erro: "Não encontrado." }, 404);
-  return env.ASSETS.fetch(request);
+  return arquivoEstatico(request, env, caminho);
+}
+
+// Fonte e imagens raramente mudam: o navegador guarda por mais tempo.
+async function arquivoEstatico(request, env, caminho) {
+  const resposta = await env.ASSETS.fetch(request);
+  if (!resposta.ok) return resposta;
+  const cache = caminho.startsWith("/fonts/") ? "public, max-age=31536000, immutable"
+    : caminho.startsWith("/img/") ? "public, max-age=2592000"
+    : "public, max-age=3600";
+  const comCache = new Response(resposta.body, resposta);
+  comCache.headers.set("Cache-Control", cache);
+  return comCache;
 }
 
 // Respostas
@@ -111,7 +127,7 @@ async function lerJson(request) {
 
 const escapar = v => String(v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-function metaTags(rota, { titulo, descricao, imagem }) {
+function metaTags(rota, { titulo, descricao, imagem, imagemCelular, conteudo }) {
   const tags = [
     `<title>${escapar(titulo)} | ${escapar(CONFIG.marca)}</title>`,
     `<meta name="description" content="${escapar(descricao)}">`,
@@ -120,7 +136,11 @@ function metaTags(rota, { titulo, descricao, imagem }) {
     '<meta property="og:type" content="website">',
     '<meta property="og:locale" content="pt_BR">',
   ];
-  if (imagem) tags.push(`<link rel="preload" as="image" href="${imagem}">`);
+  tags.push('<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>');
+  // Cada tamanho de tela baixa só a imagem que vai usar.
+  if (imagemCelular) tags.push(`<link rel="preload" as="image" href="${imagemCelular}" media="(max-width: 820px)">`);
+  if (imagem) tags.push(`<link rel="preload" as="image" href="${imagem}" media="(min-width: 821px)">`);
+  if (conteudo) tags.push('<link rel="modulepreload" href="/regras.mjs">');
   if (imagem && CONFIG.siteUrl) tags.push(`<meta property="og:image" content="${escapar(CONFIG.siteUrl + imagem)}">`);
   // Enquanto os dados forem de exemplo, o Google não deve indexar o site.
   if (CONFIG.modoExemplo) tags.push('<meta name="robots" content="noindex">');
@@ -146,6 +166,9 @@ function renderizar(rota) {
     aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e cartas de exemplo. Não divulgue esta versão.</div>' : "",
     conteudo: "",
     rodape: rodape(),
+    // Estilo e scripts vão dentro do HTML para a página abrir sem esperar outros arquivos.
+    estilo: `<style>${estiloCss}</style>`,
+    scripts: `<script>const CONFIG = ${JSON.stringify(CONFIG).replace(/</g, "\\u003c")};</script>\n<script>${uiJs}</script>`,
     marca: escapar(CONFIG.marca),
     administradora: escapar(CONFIG.administradora),
     documentoTexto: CONFIG.documento ? `, ${escapar(CONFIG.documento)}` : "",
