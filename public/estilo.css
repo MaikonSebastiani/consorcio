@@ -11,7 +11,7 @@
 :root {
   color-scheme: dark;
   --fundo: #16181b; --painel: #212429; --painel-alto: #2a2e34; --linha: #383d44;
-  --tinta: #f3f1ec; --suave: #aeb2b8;
+  --tinta: #f3f1ec; --suave: #b9bdc3; --faixa: #1d2024;
   --ouro: #d4af5a; --ouro-claro: #f0dca8; --ouro-fundo: #33302a;
   --salvia: #9ccbb4; --erro: #f39a88; --neutro: #6d737b;
   /* Cores dos gráficos, validadas sobre --painel. */
@@ -29,7 +29,7 @@ button, a, summary, input { -webkit-tap-highlight-color: transparent; touch-acti
 [hidden] { display: none !important; }
 
 .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; }
-.logo i { width: 12px; height: 12px; background: var(--ouro); transform: rotate(45deg); border-radius: 2px; }
+.logo .marca-s { width: 30px; height: 30px; flex: none; }
 a.logo { color: inherit; text-decoration: none; }
 .suave { color: var(--suave); }
 .pequeno { font-size: .82rem; }
@@ -55,6 +55,9 @@ a.botao { text-decoration: none; }
 .indicador .nota { color: var(--suave); font-size: .8rem; margin-top: 4px; }
 .indicador.destaque { background: var(--ouro-fundo); border-color: #6b5a30; }
 .indicador.destaque .valor { color: var(--ouro-claro); }
+/* Verde-sálvia marca ganho: economia e juros evitados. */
+.indicador.ganho { background: #1d2a25; border-color: #3d5c4f; }
+.indicador.ganho .valor { color: var(--salvia); }
 
 .barras { display: grid; gap: 12px; margin-top: 16px; }
 .barra-rotulos { display: flex; justify-content: space-between; gap: 12px; font-size: .86rem; margin-bottom: 5px; }
@@ -97,7 +100,10 @@ tbody th { color: var(--suave); font-weight: 700; }
 .faq summary::after { content: "+"; position: absolute; right: 4px; top: 12px; color: var(--ouro); font-size: 1.3rem; font-weight: 800; }
 .faq details[open] summary::after { content: "–"; }
 .faq details p { color: var(--suave); padding-bottom: 16px; }
-.cta-final { margin-top: 64px; background: var(--painel); border: 1px solid var(--linha); border-radius: 16px; padding: 36px 20px; text-align: center; }
+.cta-final { margin-top: 64px; background: linear-gradient(135deg, #e3c77d, #c49a3f); color: #1a1710; border-radius: 18px; padding: 44px 20px; text-align: center; }
+.cta-final .suave { color: rgba(26, 23, 16, .78); }
+.cta-final .botao { background: var(--fundo); color: var(--ouro-claro); }
+.cta-final .botao:hover { background: #24272c; }
 .cta-final h2 { font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 8px; }
 .cta-final .botao { max-width: 320px; margin: 20px auto 0; }
 .rodape { margin-top: 64px; border-top: 1px solid var(--linha); }
@@ -123,4 +129,14 @@ tbody th { color: var(--suave); font-weight: 700; }
   main .cards, main .passos { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; margin-inline: -16px; padding: 4px 16px 10px; scrollbar-width: none; overscroll-behavior-x: contain; }
   main .cards::-webkit-scrollbar, main .passos::-webkit-scrollbar { display: none; }
   main .cards > *, main .passos > * { flex: 0 0 84%; scroll-snap-align: start; }
+}
+
+/* Faixas alternadas dão ritmo à página; o fundo se estende de ponta a ponta sem gerar rolagem lateral. */
+.faixa { margin-top: 64px; padding-block: 56px; background: var(--faixa); box-shadow: 0 0 0 100vmax var(--faixa); clip-path: inset(0 -100vmax); }
+.icone { width: 30px; height: 30px; margin-bottom: 12px; fill: none; stroke: var(--ouro); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 640px) {
+  body { font-size: 16.5px; }
+  .pequeno { font-size: .86rem; }
+  .faixa { margin-top: 48px; padding-block: 44px; }
 }

@@ -79,7 +79,7 @@ async function rotear(request, env) {
   }
   if (noCrm) {
     // No endereço do CRM só passam os arquivos de estilo e script.
-    return /^\/(estilo\.css|ui\.js|regras\.mjs|fonts\/[\w.-]+\.woff2)$/.test(caminho) ? arquivoEstatico(request, env, caminho) : json({ erro: "Não encontrado." }, 404);
+    return /^\/(estilo\.css|ui\.js|regras\.mjs|favicon\.svg|fonts\/[\w.-]+\.woff2)$/.test(caminho) ? arquivoEstatico(request, env, caminho) : json({ erro: "Não encontrado." }, 404);
   }
 
   if (metodo === "GET" && PAGINAS[caminho]) return html(renderizar(caminho));
@@ -129,6 +129,7 @@ const escapar = v => String(v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&l
 
 function metaTags(rota, { titulo, descricao, imagem, imagemCelular, conteudo }) {
   const tags = [
+    '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
     `<title>${escapar(titulo)} | ${escapar(CONFIG.marca)}</title>`,
     `<meta name="description" content="${escapar(descricao)}">`,
     `<meta property="og:title" content="${escapar(titulo)}">`,
@@ -170,6 +171,7 @@ function renderizar(rota) {
     estilo: `<style>${estiloCss}</style>`,
     scripts: `<script>const CONFIG = ${JSON.stringify(CONFIG).replace(/</g, "\\u003c")};</script>\n<script>${uiJs}</script>`,
     marca: escapar(CONFIG.marca),
+    logoMarca: "<svg class=\"marca-s\" viewBox=\"0 0 40 40\" aria-hidden=\"true\"><defs><linearGradient id=\"marca-ouro\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f0dca8\"/><stop offset=\".55\" stop-color=\"#d4af5a\"/><stop offset=\"1\" stop-color=\"#a8822f\"/></linearGradient></defs><rect width=\"40\" height=\"40\" rx=\"10\" fill=\"url(#marca-ouro)\"/><path d=\"M27 13.2C25.4 11.5 23 10.5 20 10.5c-4.2 0-7 2.2-7 5.3 0 3.2 3 4.2 7 4.8 4.2.6 7 1.8 7 4.8 0 3.1-3 5.1-7 5.1-3.1 0-5.6-1-7.2-2.7\" fill=\"none\" stroke=\"#16181b\" stroke-width=\"4.2\" stroke-linecap=\"round\"/></svg>",
     administradora: escapar(CONFIG.administradora),
     documentoTexto: CONFIG.documento ? `, ${escapar(CONFIG.documento)}` : "",
     mediaHibrido: escapar(CONFIG.mediasContemplacao.hibrido),

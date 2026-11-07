@@ -10,18 +10,19 @@
   main { max-width: 1080px; margin: 0 auto; padding: 32px 16px 0; }
   h1 { font-size: clamp(2.2rem, 5.4vw, 3.5rem); margin: 14px 0 16px; max-width: 760px; }
   .opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
-  .produto { display: block; color: inherit; text-decoration: none; transition: border-color .15s, background .15s; }
+  .produto { display: block; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .15s, background .15s; }
   .produto:hover { border-color: var(--ouro); background: var(--painel-alto); }
   .produto h2 { font-size: 1.6rem; margin: 8px 0; }
   .produto .acao { display: block; color: var(--ouro-claro); font-weight: 800; margin-top: 18px; }
-  .cta-final a { display: inline-block; color: var(--ouro-claro); font-weight: 800; margin: 12px 12px 0; }
+  .cta-final a { display: inline-block; color: #1a1710; font-weight: 800; margin: 12px 12px 0; }
+  .produto-img { display: block; width: calc(100% + 40px); height: 150px; margin: -20px -20px 18px; object-fit: cover; object-position: right center; border-radius: 14px 14px 0 0; opacity: .9; }
   @media (max-width: 720px) { .opcoes { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 {{aviso}}
 <header class="topo">
-  <span class="logo"><i></i><span>{{marca}}</span></span>
+  <span class="logo">{{logoMarca}}<span>{{marca}}</span></span>
   <span class="pequeno suave">Consultoria em consórcio</span>
 </header>
 <main>
@@ -30,12 +31,14 @@
   <p class="suave">Escolha seu objetivo e receba uma estratégia de lance personalizada para buscar a contemplação mais cedo.</p>
   <div class="opcoes">
     <a class="cartao produto" href="/carro">
+      <img class="produto-img" src="/img/hero-carro-celular.webp" alt="" width="1208" height="680" decoding="async">
       <span class="sobretitulo">Carro</span>
       <h2>Comprar ou trocar de carro</h2>
       <p class="suave">Compare consórcio e financiamento para o carro que você quer.</p>
       <span class="acao">Simular carro →</span>
     </a>
     <a class="cartao produto" href="/imovel">
+      <img class="produto-img" src="/img/hero-imovel-celular.webp" alt="" width="1208" height="680" decoding="async">
       <span class="sobretitulo">Imóvel</span>
       <h2>Sair do aluguel ou investir</h2>
       <p class="suave">Veja quanto a espera pesa no bolso e quanto cabe no seu mês.</p>
@@ -43,12 +46,12 @@
     </a>
   </div>
 
-  <section class="secao">
+  <section class="secao faixa">
     <h2>Por que planejar com consórcio</h2>
     <div class="cards">
-      <div class="cartao"><h3>Sem juros</h3><p class="suave">Você paga taxa de administração, não juros. Por isso, o custo total costuma ser menor que o de um financiamento.</p></div>
-      <div class="cartao"><h3>Estratégia de lance</h3><p class="suave">Você não depende só do sorteio. Com lance híbrido, a média de referência é de {{mediaHibrido}} até a contemplação, sem promessa de prazo.</p></div>
-      <div class="cartao"><h3>Sem falsa promessa</h3><p class="suave">A contemplação não tem data garantida. Aqui você vê os custos e as regras antes de decidir.</p></div>
+      <div class="cartao"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5 M5.5 7.5a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M14.5 16.5a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/></svg><h3>Sem juros</h3><p class="suave">Você paga taxa de administração, não juros. Por isso, o custo total costuma ser menor que o de um financiamento.</p></div>
+      <div class="cartao"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0 M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0 M12 12h.01"/></svg><h3>Estratégia de lance</h3><p class="suave">Você não depende só do sorteio. Com lance híbrido, a média de referência é de {{mediaHibrido}} até a contemplação, sem promessa de prazo.</p></div>
+      <div class="cartao"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.8-3.4 8-8 9-4.6-1-8-4.2-8-9V6z M9 12l2 2 4-4"/></svg><h3>Sem falsa promessa</h3><p class="suave">A contemplação não tem data garantida. Aqui você vê os custos e as regras antes de decidir.</p></div>
     </div>
   </section>
 

@@ -111,7 +111,7 @@
 <body>
 {{aviso}}
 <header class="topo">
-  <a class="logo" href="/"><i></i><span>{{marca}}</span></a>
+  <a class="logo" href="/">{{logoMarca}}<span>{{marca}}</span></a>
   <nav class="topo-nav" id="navegacao" aria-label="Nesta página">
     <a href="#como-funciona">Como funciona</a>
     <a href="#lance">Lance</a>
@@ -484,7 +484,7 @@ function telaResultado() {
 
   const numeros = el("div", "indicadores");
   numeros.append(
-    indicador("Economia estimada", r.economia > 0 ? reais(r.economia) : "Custos próximos", r.economia > 0 ? "a menos que no financiamento" : "em relação ao financiamento", true),
+    indicador("Economia estimada", r.economia > 0 ? reais(r.economia) : "Custos próximos", r.economia > 0 ? "a menos que no financiamento" : "em relação ao financiamento", "ganho"),
     indicador("Carta indicada", reais(carta), carta >= respostas.valor ? `Cobre o valor de ${reais(respostas.valor)}` : `Maior carta disponível para ${reais(respostas.valor)}`),
     indicador("Parcela estimada", reais(r.parcelaConsorcio), cabe ? `Cabe no seu limite de ${reais(respostas.parcela)}` : `Seu limite de ${reais(respostas.parcela)} cobre cerca de ${reais(r.creditoQueCabe)} de crédito`),
     indicador("Juros que você evita", reais(r.jurosFin), `No consórcio, as taxas estimadas são de ${reais(r.taxasConsorcio)}`),

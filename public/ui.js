@@ -8,7 +8,8 @@ function el(tag, classe, texto) {
 }
 
 function indicador(rotulo, valor, nota, destaque) {
-  const c = el("div", destaque ? "indicador destaque" : "indicador");
+  // destaque pode ser true (dourado) ou o nome de uma variação, como "ganho".
+  const c = el("div", destaque === true ? "indicador destaque" : destaque ? `indicador ${destaque}` : "indicador");
   c.append(el("div", "rotulo", rotulo), el("div", "valor", valor));
   if (nota) c.append(el("div", "nota", nota));
   return c;
