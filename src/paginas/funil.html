@@ -61,12 +61,6 @@
   .cinco { grid-column: span 5; }
   .inteiro { grid-column: span 12; }
   .tabela-plano { margin-top: 18px; }
-  .grupo { border-top: 1px solid var(--linha); padding: 14px 0; }
-  .grupo:first-of-type { border-top: 0; }
-  .grupo:last-child { padding-bottom: 0; }
-  .grupo-topo { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
-  .vagas { color: var(--ouro-claro); font-weight: 800; white-space: nowrap; }
-  .contagem { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--tinta); }
   .perda { color: var(--ouro-claro); font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; margin: 6px 0; }
   .estrategia { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
   .estrategia ol { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 8px; }
@@ -112,14 +106,13 @@
 
 <script src="/config.js"></script>
 <script src="/ui.js"></script>
-<script type="module">import { erroCelular } from "/regras.mjs"; window.erroCelular = erroCelular;</script>
+<script type="module">import { cartaIndicada, erroCelular } from "/regras.mjs"; Object.assign(window, { cartaIndicada, erroCelular });</script>
 <script>
 const app = document.getElementById("app");
 const pagina = document.getElementById("pagina");
 const barraCta = document.getElementById("barraCta");
 const respostas = {};
 const lead = {};
-let relogio = null;
 
 const QUANDO = [
   ["em até 6 meses", "Em até 6 meses"],
@@ -219,7 +212,6 @@ function mostrarSimulacao() {
 }
 
 function mostrarPagina() {
-  clearInterval(relogio);
   app.hidden = true;
   pagina.hidden = false;
   document.getElementById("navegacao").hidden = false;
@@ -236,7 +228,7 @@ function iniciarPagina() {
   const custo = el("div", "cartao");
   custo.append(el("h3", "", "Custo total estimado"), barrasCusto(r));
   const numeros = el("div", "indicadores");
-  numeros.append(indicador("Parcela estimada", reais(r.parcelaConsorcio), "no consórcio", true));
+  numeros.append(indicador("Parcela estimada", reais(r.parcelaConsorcio), `${reais(r.economia)} a menos que no financiamento`, true));
   const aviso = el("div", "previa-aviso");
   aviso.append(el("span", "selo-exemplo", "Exemplo de simulação"), el("p", "pequeno suave", `Valores ilustrativos para ${P.exemploTexto} de ${reais(P.exemplo)}. Os seus aparecem depois das perguntas.`));
   document.getElementById("previa").append(aviso, numeros, custo);
@@ -386,25 +378,7 @@ async function enviarLead(site) {
   if (!resposta.ok) throw new Error((await resposta.json()).erro || "Não foi possível enviar. Tente de novo.");
 }
 
-function gruposDisponiveis() {
-  const agora = Date.now();
-  return CONFIG.grupos
-    .filter(g => g.produto === produto && g.vagas > 0 && new Date(g.limiteAdesao).getTime() > agora)
-    .filter(g => respostas.valor >= g.creditoMin && respostas.valor <= g.creditoMax)
-    .sort((a, b) => new Date(a.limiteAdesao) - new Date(b.limiteAdesao));
-}
-
-function textoContagem(limite) {
-  const resta = new Date(limite).getTime() - Date.now();
-  if (resta <= 0) return "Prazo encerrado";
-  const dias = Math.floor(resta / 864e5);
-  const horas = Math.floor(resta % 864e5 / 36e5);
-  const minutos = Math.floor(resta % 36e5 / 6e4);
-  const segundos = Math.floor(resta % 6e4 / 1e3);
-  return `${dias}d ${String(horas).padStart(2, "0")}h ${String(minutos).padStart(2, "0")}m ${String(segundos).padStart(2, "0")}s`;
-}
-
-function tabelaPlano(r) {
+function tabelaPlano(r, carta) {
   const { consorcio: c, financiamento: f } = dados;
   const tabela = el("table", "tabela-plano");
   const cabeca = el("thead");
@@ -414,7 +388,7 @@ function tabelaPlano(r) {
   const corpo = el("tbody");
   [["Parcela", reais(r.parcelaConsorcio), reais(r.parcelaFin)],
    ["Prazo", `${c.prazoMeses} meses`, `${f.prazoMeses} meses`],
-   [P.quandoRecebe, "Ao ser contemplado por sorteio ou lance", P.quandoFinanciamento(reais(respostas.valor * f.entrada))]].forEach(([rotulo, a, b]) => {
+   [P.quandoRecebe, "Ao ser contemplado por sorteio ou lance", P.quandoFinanciamento(reais(carta * f.entrada))]].forEach(([rotulo, a, b]) => {
     const linha = el("tr");
     linha.append(el("th", "", rotulo), el("td", "", a), el("td", "", b));
     corpo.append(linha);
@@ -423,34 +397,31 @@ function tabelaPlano(r) {
   return tabela;
 }
 
-function cartaoEstrategia(r, grupos) {
-  const plano = planoDeLance(produto, respostas.valor, respostas.reserva);
+function cartaoEstrategia(r, carta) {
+  const plano = planoDeLance(produto, carta, respostas.reserva);
   const guardar = Math.ceil(r.parcelaConsorcio * 0.2 / 10) * 10;
   const pressa = respostas.quando === "em até 6 meses" || respostas.quando === "em 6 a 12 meses";
   const passosLance = [
     plano.proprio
       ? `Use cerca de ${reais(plano.valorProprio)} da sua reserva como lance livre.`
       : `Comece pelo sorteio e guarde ${reais(guardar)} por mês: em 12 meses são ${reais(guardar * 12)} para o lance.`,
-    plano.embutido && `Some até ${reais(plano.valorEmbutido)} de lance embutido, se o grupo permitir. Essa parte sai da carta, então o crédito que você recebe diminui.`,
+    plano.embutido && `Some até ${reais(plano.valorEmbutido)} de lance embutido, se o plano permitir. Essa parte sai da carta, então o crédito que você recebe diminui.`,
     pressa
       ? "Como seu prazo é curto, oferte lance desde as primeiras assembleias."
       : "Com mais prazo, aumente o lance aos poucos e escolha o melhor momento para ofertar.",
+    `${CONFIG.consultor} acompanha os resultados das assembleias com você e ajusta o lance ao longo do plano.`,
   ].filter(Boolean);
 
   const c = el("div", "cartao inteiro estrategia");
   const texto = el("div");
   const lista = el("ol");
   passosLance.forEach(p => lista.append(el("li", "", p)));
-  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), el("p", "suave", "Personalizada para buscar a contemplação mais cedo."), lista);
+  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), el("p", "suave", "Personalizada para buscar a contemplação mais cedo, com acompanhamento do início ao fim."), lista);
 
   const numeros = el("div");
-  const percentual = v => `${Math.round(v * 100)}%`;
-  numeros.append(el("h3", "", "Lance que você pode montar"), el("p", "pequeno suave", plano.total ? `Cerca de ${reais(plano.valorTotal)} sobre o valor da carta` : "Hoje a sua chance vem do sorteio"));
-  const referencia = grupos.find(g => g.lanceReferencia);
-  const itens = [{ rotulo: "Seu lance possível", valor: plano.total * 100, texto: percentual(plano.total) }];
-  if (referencia) itens.push({ rotulo: `Referência recente do ${referencia.nome}`, valor: referencia.lanceReferencia, texto: `${referencia.lanceReferencia}%`, neutra: true });
-  numeros.append(barras(itens));
-  numeros.append(el("p", "pequeno suave legal", `Estimativa. Lances anteriores não garantem resultado. ${CONFIG.consultor} ajusta a estratégia com você.`));
+  numeros.append(el("h3", "", "Lance que você pode montar"), el("p", "pequeno suave", plano.total ? `Cerca de ${reais(plano.valorTotal)} sobre a carta de ${reais(carta)}` : "Hoje a sua chance vem do sorteio"));
+  numeros.append(barras([{ rotulo: "Seu lance possível", valor: plano.total * 100, texto: `${Math.round(plano.total * 100)}%`, detalhe: `Lance possível: ${Math.round(plano.total * 100)}% da carta` }]));
+  numeros.append(el("p", "pequeno suave legal", "Estimativa. O resultado de cada assembleia depende dos lances ofertados, e nenhuma estratégia garante contemplação."));
   c.append(texto, numeros);
   return c;
 }
@@ -458,64 +429,41 @@ function cartaoEstrategia(r, grupos) {
 function cartaoEspera(chances) {
   const c = el("div", "cartao metade");
   c.append(el("h3", "", "O que você perde deixando para depois"));
-  const textoChances = `Cada assembleia é uma chance de contemplação por sorteio ou lance. Quem entra daqui a 1 ano fica fora de ${chances} delas.`;
+  const textoChances = `Cada mês fora do consórcio é uma assembleia em que você não concorre: nem pelo sorteio, nem com a estratégia de lance e o acompanhamento de ${CONFIG.consultor}. Quem entra daqui a 1 ano perde ${chances} chances.`;
   if (produto === "carro") {
-    c.append(el("div", "perda", `${chances} chances a menos`), el("p", "suave", textoChances));
+    c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances));
     return c;
   }
   const aluguelAno = (respostas.aluguel || 0) * 12;
   const alta = respostas.valor * dados.altaAnual;
   const partes = [aluguelAno && `${reais(aluguelAno)} de aluguel`, `${reais(alta)} de alta do imóvel, se subir ${Math.round(dados.altaAnual * 100)}% no ano`].filter(Boolean);
-  c.append(el("div", "perda", `${reais(aluguelAno + alta)} em 12 meses`), el("p", "suave", `São ${partes.join(" e ")}.`), el("p", "suave", textoChances));
+  c.append(el("div", "perda", `${chances} chances e ${reais(aluguelAno + alta)} a menos`), el("p", "suave", textoChances), el("p", "suave", `Em 12 meses de espera, são ${partes.join(" e ")}.`));
   return c;
 }
 
 function telaResultado() {
   app.className = "";
-  const r = calcular(respostas.valor, respostas.parcela);
+  const carta = cartaIndicada(dados.cartas, respostas.valor);
+  const r = calcular(carta, respostas.parcela);
   const cabe = respostas.parcela >= r.parcelaConsorcio;
   const chances = dados.assembleiasPorAno;
 
   const topo = el("div", "painel-topo");
   topo.append(el("div", "sobretitulo", "Seu painel"), el("h2", "", `${lead.nome}, este é o seu plano`),
-    el("p", "suave", `${P.bem} de ${reais(respostas.valor)}, ${respostas.quando}`));
+    el("p", "suave", `Carta de ${reais(carta)} para ${P.exemploTexto} de ${reais(respostas.valor)}`));
 
   const numeros = el("div", "indicadores");
   numeros.append(
-    indicador("Parcela estimada", reais(r.parcelaConsorcio), cabe ? `Cabe no seu limite de ${reais(respostas.parcela)}` : `Seu limite de ${reais(respostas.parcela)} cobre cerca de ${reais(r.creditoQueCabe)} de crédito`, true),
-    indicador("Total no consórcio", reais(r.totalConsorcio), `${reais(r.taxasConsorcio)} em taxas estimadas`),
-    indicador("Total no financiamento", reais(r.totalFin), `${reais(r.jurosFin)} em juros estimados`),
-    indicador("Diferença estimada", r.economia > 0 ? reais(r.economia) : "Custos próximos", r.economia > 0 ? "a menos no consórcio" : undefined),
+    indicador("Economia estimada", r.economia > 0 ? reais(r.economia) : "Custos próximos", r.economia > 0 ? "a menos que no financiamento" : "em relação ao financiamento", true),
+    indicador("Carta indicada", reais(carta), carta >= respostas.valor ? `Cobre o valor de ${reais(respostas.valor)}` : `Maior carta disponível para ${reais(respostas.valor)}`),
+    indicador("Parcela estimada", reais(r.parcelaConsorcio), cabe ? `Cabe no seu limite de ${reais(respostas.parcela)}` : `Seu limite de ${reais(respostas.parcela)} cobre cerca de ${reais(r.creditoQueCabe)} de crédito`),
+    indicador("Juros que você evita", reais(r.jurosFin), `No consórcio, as taxas estimadas são de ${reais(r.taxasConsorcio)}`),
   );
 
   const painel = el("div", "painel");
-  const grupos = gruposDisponiveis();
-
-  const comparativo = el("div", grupos.length ? "cartao sete" : "cartao inteiro");
-  comparativo.append(el("h3", "", "Consórcio ou financiamento?"), el("p", "pequeno suave", "Custo total estimado"), barrasCusto(r), tabelaPlano(r));
-  painel.append(comparativo);
-
-  const contagens = [];
-  if (grupos.length) {
-    const lista = el("div", "cartao cinco");
-    lista.append(el("h3", "", "Grupos abertos para o seu valor"));
-    grupos.forEach(g => {
-      const item = el("div", "grupo");
-      const linhaTopo = el("div", "grupo-topo");
-      linhaTopo.append(el("strong", "", g.nome), el("span", "vagas", `${g.vagas} ${g.vagas === 1 ? "vaga" : "vagas"}`));
-      const contagem = el("span", "contagem", textoContagem(g.limiteAdesao));
-      const linha = el("div", "pequeno suave", "Prazo para entrar: ");
-      linha.append(contagem);
-      item.append(linhaTopo, linha);
-      lista.append(item);
-      contagens.push([contagem, g.limiteAdesao]);
-    });
-    painel.append(lista);
-  }
-  clearInterval(relogio);
-  if (contagens.length) relogio = setInterval(() => contagens.forEach(([n, l]) => { n.textContent = textoContagem(l); }), 1000);
-
-  painel.append(cartaoEstrategia(r, grupos));
+  const comparativo = el("div", "cartao inteiro");
+  comparativo.append(el("h3", "", "Consórcio ou financiamento?"), el("p", "pequeno suave", `Custo total estimado para a carta de ${reais(carta)}`), barrasCusto(r), tabelaPlano(r, carta));
+  painel.append(comparativo, cartaoEstrategia(r, carta));
 
   const espera = cartaoEspera(chances);
 

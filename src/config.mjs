@@ -1,6 +1,6 @@
 // Tudo que você precisa editar fica neste arquivo. O navegador recebe estes dados em /config.js.
 export default {
-  // Mude para false só depois de trocar as taxas e os grupos pelos dados reais do seu gestor.
+  // Mude para false só depois de trocar as taxas e as cartas pelos dados reais do seu gestor.
   modoExemplo: true,
 
   consultor: "Seu Nome",
@@ -22,6 +22,8 @@ export default {
     assembleiasPorAno: 12,
     // EXEMPLO: parte da carta que pode virar lance embutido. Use 0 se o grupo não permitir.
     lanceEmbutidoMax: 0.25,
+    // EXEMPLO: valores de carta disponíveis. O site indica a menor carta que cobre o valor do carro.
+    cartas: [50000, 70000, 90000, 110000, 130000, 160000, 200000, 250000, 300000],
   },
 
   imovel: {
@@ -35,16 +37,7 @@ export default {
     lanceEmbutidoMax: 0.25,
     // EXEMPLO: estimativa de alta anual do preço do imóvel.
     altaAnual: 0.06,
+    // EXEMPLO: valores de carta disponíveis. O site indica a menor carta que cobre o valor do imóvel.
+    cartas: [150000, 200000, 250000, 300000, 350000, 400000, 500000, 600000, 800000, 1000000, 1500000],
   },
-
-  // Painel de oportunidades. Grupos sem vaga ou com prazo vencido somem sozinhos.
-  // lanceReferencia: % de lance recente do grupo, informado pelo gestor. Sem esse campo, a comparação não aparece.
-  // EXEMPLO: substitua pelos grupos reais.
-  grupos: [
-    { produto: "carro", nome: "Grupo A", creditoMin: 40000, creditoMax: 120000, vagas: 7, lanceReferencia: 35, limiteAdesao: "2026-11-24T18:00:00-03:00" },
-    { produto: "carro", nome: "Grupo B", creditoMin: 80000, creditoMax: 200000, vagas: 4, lanceReferencia: 40, limiteAdesao: "2026-11-28T18:00:00-03:00" },
-    { produto: "carro", nome: "Grupo C", creditoMin: 150000, creditoMax: 300000, vagas: 12, lanceReferencia: 30, limiteAdesao: "2026-12-05T18:00:00-03:00" },
-    { produto: "imovel", nome: "Grupo D", creditoMin: 150000, creditoMax: 500000, vagas: 6, lanceReferencia: 38, limiteAdesao: "2026-11-26T18:00:00-03:00" },
-    { produto: "imovel", nome: "Grupo E", creditoMin: 400000, creditoMax: 1500000, vagas: 3, lanceReferencia: 42, limiteAdesao: "2026-12-03T18:00:00-03:00" },
-  ],
 };

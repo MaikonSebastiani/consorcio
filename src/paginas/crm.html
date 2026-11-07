@@ -335,13 +335,13 @@ function desenharDashboard() {
   }));
 
   const lista = leadsDoPeriodo();
-  const soma = status => lista.filter(l => l.status === status).reduce((t, l) => t + l.valor, 0);
+  const soma = status => lista.filter(l => l.status === status).reduce((t, l) => t + (l.carta || l.valor), 0);
   const vendidos = lista.filter(l => l.status === "vendido").length;
   const aguardando = lista.filter(l => l.temperatura === "quente" && l.status === "novo").length;
   $("indicadores").replaceChildren(
     indicador("Leads", String(lista.length), "no período"),
     indicador("Quentes aguardando", String(aguardando), "ainda sem contato", true),
-    indicador("Em negociação", reais(soma("negociando")), "em crédito desejado"),
+    indicador("Em negociação", reais(soma("negociando")), "em cartas indicadas"),
     indicador("Vendido", reais(soma("vendido")), `${vendidos} ${vendidos === 1 ? "venda" : "vendas"}`),
     indicador("Conversão", lista.length ? `${(vendidos / lista.length * 100).toFixed(1).replace(".", ",")}%` : "0%", "leads que viraram venda"),
   );
@@ -376,7 +376,7 @@ function confirmarExclusao(l) {
 }
 
 function estrategiaResumo(l) {
-  const plano = planoDeLance(l.objetivo, l.valor, l.reserva);
+  const plano = planoDeLance(l.objetivo, l.carta || l.valor, l.reserva);
   return `Estratégia: ${plano.nome} (${Math.round(plano.total * 100)}%, ${reais(plano.valorTotal)})`;
 }
 
@@ -420,6 +420,7 @@ function cartaoLead(l) {
   c.append(
     topo,
     el("p", "", `${NOME_PRODUTO[l.objetivo]} · Quer ${l.motivo}: ${reais(l.valor)}`),
+    ...(l.carta ? [el("p", "", `Carta indicada: ${reais(l.carta)}`)] : []),
     el("p", "", `Parcela até ${reais(l.parcela)} (estimada ${reais(l.parcela_estimada)})`),
     el("p", "", `Lance: ${l.reserva} · Prazo: ${l.quando}`),
     el("p", "", estrategiaResumo(l)),

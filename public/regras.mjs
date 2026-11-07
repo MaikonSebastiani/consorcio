@@ -12,3 +12,9 @@ export function erroCelular(digitos) {
   if (/^(\d)\1{7}$/.test(d.slice(3))) return "Digite um número de celular válido.";
   return "";
 }
+
+// Menor carta que cobre o valor desejado; se nenhuma cobrir, a maior disponível.
+export function cartaIndicada(cartas, valor) {
+  const ordenadas = [...cartas].sort((a, b) => a - b);
+  return ordenadas.find(carta => carta >= valor) ?? ordenadas.at(-1);
+}

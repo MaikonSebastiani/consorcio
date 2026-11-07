@@ -1,5 +1,5 @@
 import CONFIG from "./config.mjs";
-import { erroCelular } from "../public/regras.mjs";
+import { cartaIndicada, erroCelular } from "../public/regras.mjs";
 import paginaInicial from "./paginas/index.html";
 import paginaFunil from "./paginas/funil.html";
 import paginaPrivacidade from "./paginas/privacidade.html";
@@ -143,7 +143,7 @@ function renderizar(rota) {
   const contato = [CONFIG.email, CONFIG.telefone].filter(Boolean).map(escapar).join(" ou ");
   const valores = {
     meta: metaTags(rota, pagina),
-    aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e grupos de exemplo. Não divulgue esta versão.</div>' : "",
+    aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e cartas de exemplo. Não divulgue esta versão.</div>' : "",
     conteudo: pagina.conteudo ?? "",
     rodape: rodape(),
     consultor: escapar(CONFIG.consultor),
@@ -201,16 +201,17 @@ async function receberLead(request, env) {
   if (problemaCelular) return json({ erro: problemaCelular }, 400);
   if (!leadValido(l)) return json({ erro: "Dados inválidos." }, 400);
   const agora = new Date().toISOString();
-  const estimada = parcelaEstimada(l.objetivo, l.valor);
+  const carta = cartaIndicada(CONFIG[l.objetivo].cartas, l.valor);
+  const estimada = parcelaEstimada(l.objetivo, carta);
   // Quem refaz a simulação atualiza o lead existente e mantém status e anotações.
   await env.DB.prepare(`INSERT INTO leads
-    (nome, whatsapp, objetivo, motivo, valor, parcela, parcela_estimada, reserva, quando, temperatura, aluguel, consentimento_em, criado_em, atualizado_em)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (nome, whatsapp, objetivo, motivo, valor, carta, parcela, parcela_estimada, reserva, quando, temperatura, aluguel, consentimento_em, criado_em, atualizado_em)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(whatsapp, objetivo) DO UPDATE SET
-      nome = excluded.nome, motivo = excluded.motivo, valor = excluded.valor, parcela = excluded.parcela,
+      nome = excluded.nome, motivo = excluded.motivo, valor = excluded.valor, carta = excluded.carta, parcela = excluded.parcela,
       parcela_estimada = excluded.parcela_estimada, reserva = excluded.reserva, quando = excluded.quando,
       temperatura = excluded.temperatura, aluguel = excluded.aluguel, consentimento_em = excluded.consentimento_em, atualizado_em = excluded.atualizado_em`)
-    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, l.parcela, estimada, l.reserva, l.quando,
+    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, carta, l.parcela, estimada, l.reserva, l.quando,
       temperatura(l, estimada), l.aluguel ?? 0, agora, agora, agora)
     .run();
   return json({ ok: true }, 201);
