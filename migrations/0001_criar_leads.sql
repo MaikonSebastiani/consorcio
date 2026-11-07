@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS leads (
+  id INTEGER PRIMARY KEY,
+  nome TEXT NOT NULL,
+  whatsapp TEXT NOT NULL,
+  objetivo TEXT NOT NULL,
+  motivo TEXT NOT NULL,
+  valor INTEGER NOT NULL,
+  parcela INTEGER NOT NULL,
+  parcela_estimada INTEGER NOT NULL,
+  reserva TEXT NOT NULL,
+  quando TEXT NOT NULL,
+  temperatura TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'novo',
+  notas TEXT NOT NULL DEFAULT '',
+  consentimento_em TEXT NOT NULL,
+  criado_em TEXT NOT NULL,
+  atualizado_em TEXT NOT NULL,
+  aluguel INTEGER NOT NULL DEFAULT 0,
+  UNIQUE (whatsapp, objetivo)
+);

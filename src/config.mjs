@@ -1,5 +1,5 @@
-// Tudo que você precisa editar fica neste arquivo.
-const CONFIG = {
+// Tudo que você precisa editar fica neste arquivo. O navegador recebe estes dados em /config.js.
+export default {
   // Mude para false só depois de trocar as taxas e os grupos pelos dados reais do seu gestor.
   modoExemplo: true,
 
@@ -48,5 +48,3 @@ const CONFIG = {
     { produto: "imovel", nome: "Grupo E", creditoMin: 400000, creditoMax: 1500000, vagas: 3, lanceReferencia: 42, limiteAdesao: "2026-12-03T18:00:00-03:00" },
   ],
 };
-
-if (typeof module !== "undefined") module.exports = CONFIG;

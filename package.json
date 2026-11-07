@@ -1,10 +1,14 @@
 {
-  "name": "funil-consorcio",
+  "name": "consorcio",
   "private": true,
-  "engines": {
-    "node": ">=24"
-  },
   "scripts": {
-    "start": "node --env-file=.env --disable-warning=ExperimentalWarning server.js"
+    "dev": "wrangler dev --port 4173",
+    "banco:local": "wrangler d1 migrations apply consorcio-leads --local",
+    "banco:criar": "wrangler d1 create consorcio-leads",
+    "banco:remoto": "wrangler d1 migrations apply consorcio-leads --remote",
+    "publicar": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0"
   }
 }

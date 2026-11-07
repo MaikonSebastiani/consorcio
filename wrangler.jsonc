@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "consorcio",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-23",
+  // Igual ao saitama-crm: só funciona pelos domínios próprios, nunca por *.workers.dev.
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "rules": [{ "type": "Text", "globs": ["**/*.html"], "fallthrough": true }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "consorcio-leads",
+      // Preencher com o ID gerado por `npm run banco:criar` na publicação.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "LIMITE_LEADS", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } }
+  ],
+  "vars": {
+    "CRM_HOST": "consorcio.gruposaitama.com.br",
+    // Preencher com os dados do aplicativo criado no Cloudflare Access para o CRM.
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  }
+  // Na publicação, adicionar:
+  // "routes": [
+  //   { "pattern": "gruposaitama.com.br", "custom_domain": true },
+  //   { "pattern": "consorcio.gruposaitama.com.br", "custom_domain": true }
+  // ]
+}

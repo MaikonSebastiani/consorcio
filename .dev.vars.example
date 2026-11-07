@@ -1,0 +1,2 @@
+# Só para desenvolvimento local: abre o CRM em /crm sem o Cloudflare Access.
+DEV_SEM_ACCESS=1

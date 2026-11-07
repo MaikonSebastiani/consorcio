@@ -7,13 +7,8 @@
 <title>CRM de Leads</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="/estilo.css">
 <style>
-  .login { max-width: 360px; margin: 16vh auto 0; padding: 0 16px; }
-  .login h1 { font-size: 1.5rem; margin-top: 14px; }
-  .login input { width: 100%; padding: 13px; margin: 16px 0 12px; border: 1px solid var(--linha); border-radius: 10px; background: var(--painel); }
-  .login .erro { margin-top: 10px; }
-
   .estrutura { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
   .lateral { border-right: 1px solid var(--linha); padding: 22px 14px; display: flex; flex-direction: column; gap: 24px; position: sticky; top: 0; height: 100vh; }
   .lateral .logo { padding: 0 10px; }
@@ -96,22 +91,14 @@
 </style>
 </head>
 <body>
-<form class="login" id="login" hidden>
-  <span class="logo"><i></i>CRM de Leads</span>
-  <h1>Entrar</h1>
-  <input id="senha" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
-  <button class="botao">Entrar</button>
-  <p class="erro" id="erroLogin" role="alert"></p>
-</form>
-
-<div class="estrutura" id="painel" hidden>
+<div class="estrutura" id="painel">
   <aside class="lateral">
     <span class="logo"><i></i>CRM de Leads</span>
     <nav>
       <button class="aba" id="abaDashboard" aria-current="page">Dashboard</button>
       <button class="aba" id="abaLeads">Leads</button>
     </nav>
-    <button class="botao leve" id="sair">Sair</button>
+    <a class="botao leve" href="/cdn-cgi/access/logout">Sair</a>
   </aside>
 
   <main class="conteudo">
@@ -166,8 +153,8 @@
   </form>
 </dialog>
 
-<script src="config.js"></script>
-<script src="ui.js"></script>
+<script src="/config.js"></script>
+<script src="/ui.js"></script>
 <script>
 const COLUNAS = [["novo", "Novo"], ["contato", "Em contato"], ["negociando", "Negociando"], ["vendido", "Vendido"], ["perdido", "Perdido"]];
 const TEMPERATURAS = [["quente", "Quente"], ["morno", "Morno"], ["frio", "Frio"]];
@@ -188,15 +175,8 @@ async function api(caminho, metodo = "GET", dados) {
     body: dados ? JSON.stringify(dados) : undefined,
   });
   const corpo = await resposta.json();
-  if (resposta.status === 401 && caminho !== "/api/login") { mostrarLogin(); throw new Error("sessão"); }
   if (!resposta.ok) throw new Error(corpo.erro || "Não foi possível concluir.");
   return corpo;
-}
-
-function mostrarLogin() {
-  $("painel").hidden = true;
-  $("login").hidden = false;
-  $("senha").focus();
 }
 
 function telefone(d) {
@@ -379,7 +359,7 @@ async function salvar(lead, mudancas) {
   try {
     Object.assign(lead, await api(`/api/leads/${lead.id}`, "PATCH", mudancas));
   } catch (e) {
-    if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+    $("erroPainel").textContent = e.message;
   }
 }
 
@@ -433,7 +413,7 @@ function cartaoLead(l) {
       leads = leads.filter(x => x.id !== l.id);
       desenhar();
     } catch (e) {
-      if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+      $("erroPainel").textContent = e.message;
     }
   };
 
@@ -500,31 +480,17 @@ function abrir(tela) {
 async function carregar() {
   try {
     leads = await api("/api/leads");
-    $("login").hidden = true;
-    $("painel").hidden = false;
     $("erroPainel").textContent = "";
     desenhar();
   } catch (e) {
-    if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+    $("erroPainel").textContent = e.message;
   }
 }
 
-$("login").onsubmit = async e => {
-  e.preventDefault();
-  $("erroLogin").textContent = "";
-  try {
-    await api("/api/login", "POST", { senha: $("senha").value });
-    $("senha").value = "";
-    carregar();
-  } catch (erro) {
-    $("erroLogin").textContent = erro.message;
-  }
-};
 $("modalExcluir").onclick = e => { if (e.target === $("modalExcluir")) $("modalExcluir").close(); };
 $("abaDashboard").onclick = () => abrir("dashboard");
 $("abaLeads").onclick = () => abrir("leads");
 document.querySelectorAll(".atualizar").forEach(b => { b.onclick = carregar; });
-$("sair").onclick = async () => { await api("/api/logout", "POST", {}); leads = []; mostrarLogin(); };
 $("busca").oninput = desenharQuadro;
 $("filtro").onchange = desenharQuadro;
 carregar();
