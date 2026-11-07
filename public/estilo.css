@@ -140,3 +140,12 @@ tbody th { color: var(--suave); font-weight: 700; }
   .pequeno { font-size: .86rem; }
   .faixa { margin-top: 48px; padding-block: 44px; }
 }
+
+/* Imagens da seção de perfis: carregam só quando chegam perto da tela. */
+.galeria { display: grid; grid-template-columns: 1.25fr 1fr; gap: 12px; margin-top: 24px; }
+.galeria img { display: block; width: 100%; height: 280px; object-fit: cover; border-radius: 14px; background: var(--painel); }
+@media (max-width: 640px) {
+  .galeria { grid-template-columns: 1fr; }
+  .galeria img { height: 200px; }
+  .galeria .so-computador { display: none; }
+}
