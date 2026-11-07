@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{meta}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/estilo.css">
+<style>
+  .topo { max-width: 760px; margin: 0 auto; padding: 20px 16px; }
+  main { max-width: 760px; margin: 0 auto; padding: 16px 16px 24px; }
+  h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 10px 0; }
+  h2 { font-size: 1.2rem; letter-spacing: -.01em; margin: 32px 0 8px; }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li + li { margin-top: 4px; }
+  main p, main li { color: var(--suave); }
+  main a { color: var(--ouro-claro); }
+</style>
+</head>
+<body>
+{{aviso}}
+<header class="topo"><a class="logo" href="/"><i></i><span>{{consultor}}</span></a></header>
+<main>
+  <p class="sobretitulo">Transparência</p>
+  <h1>Política de privacidade</h1>
+  <p>Aqui explicamos quais dados coletamos neste site, por que coletamos e como você pode pedir a exclusão.</p>
+
+  <h2>Quem cuida dos seus dados</h2>
+  <p>{{consultor}}{{documentoTexto}}, consultor de vendas de consórcio da {{administradora}}. Contato: {{contatoPrivacidade}}.</p>
+
+  <h2>Quais dados coletamos</h2>
+  <ul>
+    <li>Nome e celular com WhatsApp.</li>
+    <li>Respostas da simulação, como produto, valor desejado, parcela, reserva para lance, prazo e aluguel.</li>
+    <li>Data e hora da sua autorização de contato.</li>
+    <li>Endereço IP, usado temporariamente para limitar tentativas e proteger o site.</li>
+  </ul>
+
+  <h2>Para que usamos</h2>
+  <ul>
+    <li>Mostrar sua simulação e sua estratégia de lance.</li>
+    <li>Falar com você pelo WhatsApp sobre esta simulação.</li>
+    <li>Organizar o atendimento e priorizar os contatos.</li>
+  </ul>
+  <p>Usamos esses dados com base na sua autorização, que você pode retirar a qualquer momento.</p>
+
+  <h2>Com quem compartilhamos</h2>
+  <p>Não vendemos seus dados. Eles podem ser acessados pelo serviço que hospeda este site e, se você decidir contratar, compartilhados com a {{administradora}} para a proposta.</p>
+
+  <h2>Cookies e serviços de terceiros</h2>
+  <p>Hoje a área pública não usa cookies de publicidade ou de rastreamento. As fontes do site são carregadas do Google Fonts, que recebe dados técnicos da sua conexão, como o endereço IP.</p>
+
+  <h2>Por quanto tempo guardamos</h2>
+  <p>Guardamos os dados enquanto forem necessários para o atendimento ou até você pedir a exclusão, salvo quando a lei exigir que sejam mantidos.</p>
+
+  <h2>Seus direitos</h2>
+  <p>Pela LGPD, você pode pedir acesso, correção, exclusão dos seus dados e retirar sua autorização. Para isso, fale com a gente pelo contato acima.</p>
+
+  <h2>Mudanças nesta política</h2>
+  <p>Esta política pode ser atualizada, por exemplo, ao incluirmos ferramentas de medição de anúncios. A versão em vigor fica sempre nesta página.</p>
+</main>
+{{rodape}}
+</body>
+</html>

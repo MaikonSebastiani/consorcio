@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{meta}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/estilo.css">
+<style>
+  .topo { max-width: 1080px; margin: 0 auto; padding: 20px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 16px 0; }
+  h1 { font-size: clamp(2.2rem, 5.4vw, 3.5rem); margin: 14px 0 16px; max-width: 760px; }
+  .opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
+  .produto { display: block; color: inherit; text-decoration: none; transition: border-color .15s, background .15s; }
+  .produto:hover { border-color: var(--ouro); background: var(--painel-alto); }
+  .produto h2 { font-size: 1.6rem; margin: 8px 0; }
+  .produto .acao { display: block; color: var(--ouro-claro); font-weight: 800; margin-top: 18px; }
+  .cta-final a { display: inline-block; color: var(--ouro-claro); font-weight: 800; margin: 12px 12px 0; }
+  @media (max-width: 720px) { .opcoes { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+{{aviso}}
+<header class="topo">
+  <span class="logo"><i></i><span>{{consultor}}</span></span>
+  <span class="pequeno suave">Consultor {{administradora}}</span>
+</header>
+<main>
+  <p class="sobretitulo">Consórcio de carro e imóvel</p>
+  <h1>Qual conquista vem primeiro?</h1>
+  <p class="suave">Escolha seu objetivo e receba uma estratégia de lance personalizada para buscar a contemplação mais cedo.</p>
+  <div class="opcoes">
+    <a class="cartao produto" href="/carro">
+      <span class="sobretitulo">Carro</span>
+      <h2>Comprar ou trocar de carro</h2>
+      <p class="suave">Compare consórcio e financiamento para o carro que você quer.</p>
+      <span class="acao">Simular carro →</span>
+    </a>
+    <a class="cartao produto" href="/imovel">
+      <span class="sobretitulo">Imóvel</span>
+      <h2>Sair do aluguel ou investir</h2>
+      <p class="suave">Veja quanto a espera pesa no bolso e quanto cabe no seu mês.</p>
+      <span class="acao">Simular imóvel →</span>
+    </a>
+  </div>
+
+  <section class="secao">
+    <h2>Por que planejar com consórcio</h2>
+    <div class="cards">
+      <div class="cartao"><h3>Sem juros</h3><p class="suave">Você paga taxa de administração, não juros. Por isso, o custo total costuma ser menor que o de um financiamento.</p></div>
+      <div class="cartao"><h3>Estratégia de lance</h3><p class="suave">Você não depende só do sorteio: pode planejar um lance de acordo com o seu perfil e a sua reserva.</p></div>
+      <div class="cartao"><h3>Sem falsa promessa</h3><p class="suave">A contemplação não tem data garantida. Aqui você vê os custos e as regras antes de decidir.</p></div>
+    </div>
+  </section>
+
+  <section class="secao faq">
+    <h2>Dúvidas frequentes</h2>
+    <details><summary>O que é consórcio?</summary><p>É uma compra planejada em grupo. Os participantes pagam parcelas mensais e, nas assembleias, parte do grupo é contemplada por sorteio ou lance e recebe uma carta de crédito.</p></details>
+    <details><summary>Quando vou ser contemplado?</summary><p>Não dá para prever. Uma estratégia de lance ajuda a buscar a contemplação mais cedo, mas ninguém pode garantir uma data.</p></details>
+    <details><summary>A simulação tem custo ou compromisso?</summary><p>Não. Você vê uma estimativa e decide depois se quer falar sobre as opções com o consultor.</p></details>
+  </section>
+
+  <section class="cta-final">
+    <h2>Pronto para ver seus números?</h2>
+    <p class="suave">Leva 60 segundos e não tem compromisso de compra.</p>
+    <a href="/carro">Simular carro →</a>
+    <a href="/imovel">Simular imóvel →</a>
+  </section>
+</main>
+{{rodape}}
+</body>
+</html>

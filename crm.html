@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>CRM de Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+<style>
+  .login { max-width: 360px; margin: 16vh auto 0; padding: 0 16px; }
+  .login h1 { font-size: 1.5rem; margin-top: 14px; }
+  .login input { width: 100%; padding: 13px; margin: 16px 0 12px; border: 1px solid var(--linha); border-radius: 10px; background: var(--painel); }
+  .login .erro { margin-top: 10px; }
+
+  .estrutura { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
+  .lateral { border-right: 1px solid var(--linha); padding: 22px 14px; display: flex; flex-direction: column; gap: 24px; position: sticky; top: 0; height: 100vh; }
+  .lateral .logo { padding: 0 10px; }
+  .lateral nav { display: grid; gap: 4px; flex: 1; align-content: start; }
+  .aba { background: none; border: 0; text-align: left; padding: 10px 12px; border-radius: 8px; font-weight: 700; color: var(--suave); cursor: pointer; }
+  .aba:hover { color: var(--tinta); }
+  .aba[aria-current=page] { background: var(--ouro-fundo); color: var(--ouro-claro); }
+  .conteudo { padding: 24px; min-width: 0; }
+  .cabecalho { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .cabecalho h1 { font-size: 1.6rem; }
+  .acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .acoes input, .acoes select { padding: 8px 10px; border: 1px solid var(--linha); border-radius: 10px; background: var(--painel); font-size: .88rem; min-width: 0; }
+  .segmentos { display: inline-flex; flex-wrap: wrap; background: var(--painel); border: 1px solid var(--linha); border-radius: 10px; padding: 3px; }
+  .segmentos button { background: none; border: 0; border-radius: 7px; padding: 6px 10px; white-space: nowrap; font-size: .84rem; font-weight: 700; color: var(--suave); cursor: pointer; }
+  .segmentos button[aria-pressed=true] { background: var(--ouro); color: #1a1710; }
+
+  .grade { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; margin-top: 12px; }
+  .oito { grid-column: span 8; }
+  .quatro { grid-column: span 4; }
+  .seis { grid-column: span 6; }
+  .doze { grid-column: span 12; }
+  .colunas { display: flex; align-items: flex-end; gap: 2px; height: 170px; margin-top: 18px; border-bottom: 1px solid var(--linha); }
+  .dia { flex: 1; height: 100%; display: flex; align-items: flex-end; min-width: 0; }
+  .dia:hover div { background: var(--ouro); }
+  .dia div { width: 100%; background: var(--dado-ouro); border-radius: 4px 4px 0 0; }
+  .eixo { display: flex; justify-content: space-between; color: var(--suave); font-size: .76rem; margin-top: 6px; }
+  .cartao details { margin-top: 12px; font-size: .84rem; }
+  summary { cursor: pointer; color: var(--suave); font-weight: 700; }
+  .cartao details table { margin-top: 8px; }
+  .faixa { display: flex; gap: 2px; height: 16px; margin-top: 18px; }
+  .faixa div { min-width: 3px; }
+  .faixa div:first-child { border-radius: 4px 0 0 4px; }
+  .faixa div:last-child { border-radius: 0 4px 4px 0; }
+  .legenda { display: grid; gap: 8px; margin-top: 14px; font-size: .86rem; }
+  .legenda div { display: flex; align-items: center; gap: 8px; }
+  .legenda b { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .ponto { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .quente { background: var(--dado-quente); }
+  .morno { background: var(--dado-ouro); }
+  .frio { background: var(--dado-frio); }
+  .vazio { color: var(--suave); font-size: .86rem; text-align: center; padding: 28px 8px; }
+  .chamar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--linha); font-size: .88rem; }
+  .chamar:first-of-type { margin-top: 10px; }
+  .chamar a, .lead a { color: var(--ouro-claro); font-weight: 800; white-space: nowrap; }
+
+  .quadro { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 12px; overflow-x: auto; align-items: start; padding-bottom: 12px; }
+  .coluna { background: var(--painel); border: 1px solid var(--linha); border-radius: 14px; padding: 10px; min-height: 160px; }
+  .coluna h2 { display: flex; justify-content: space-between; font-size: .88rem; letter-spacing: 0; margin: 4px 6px 10px; }
+  .lead { background: var(--painel-alto); border-radius: 10px; padding: 12px; margin-bottom: 8px; font-size: .84rem; }
+  .lead-topo { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .lead strong { font-size: .98rem; overflow-wrap: anywhere; }
+  .selo { display: inline-flex; align-items: center; gap: 6px; font-size: .74rem; font-weight: 700; color: var(--suave); white-space: nowrap; }
+  .lead p { margin-top: 5px; color: var(--suave); }
+  .lead a { display: inline-block; margin: 8px 0; }
+  .lead select { width: 100%; padding: 8px; border: 1px solid var(--linha); border-radius: 8px; background: var(--painel); }
+  .lead details { margin-top: 8px; }
+  .lead textarea { width: 100%; min-height: 76px; margin-top: 8px; padding: 8px; border: 1px solid var(--linha); border-radius: 8px; background: var(--painel); resize: vertical; }
+  .apagar { display: block; margin-top: 8px; background: none; border: 0; color: var(--erro); padding: 6px 0; font-size: .82rem; font-weight: 700; cursor: pointer; }
+
+  .modal { width: min(420px, calc(100vw - 32px)); padding: 0; background: var(--painel); color: var(--tinta); border: 1px solid var(--linha); border-radius: 16px; }
+  .modal::backdrop { background: rgba(10, 11, 13, .72); }
+  .modal form { padding: 24px; }
+  .modal .sobretitulo { color: var(--erro); }
+  .modal h2 { font-size: 1.35rem; margin: 6px 0 16px; }
+  .modal-lead { display: grid; background: var(--painel-alto); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; overflow-wrap: anywhere; }
+  .modal-acoes { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .modal-acoes .botao { width: auto; padding: 11px 18px; font-size: .92rem; }
+  .botao.excluir { background: var(--erro); color: #2b100b; }
+  .botao.excluir:hover { background: #f8b8aa; }
+
+  @media (max-width: 860px) {
+    .estrutura { grid-template-columns: minmax(0, 1fr); }
+    .lateral { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; border-right: 0; border-bottom: 1px solid var(--linha); padding: 12px 16px; }
+    .lateral .logo { padding: 0; }
+    .lateral nav { order: 3; flex: 0 0 100%; grid-template-columns: 1fr 1fr; }
+    .aba { text-align: center; }
+    .conteudo { padding: 16px; }
+    .oito, .quatro, .seis { grid-column: span 12; }
+  }
+</style>
+</head>
+<body>
+<form class="login" id="login" hidden>
+  <span class="logo"><i></i>CRM de Leads</span>
+  <h1>Entrar</h1>
+  <input id="senha" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
+  <button class="botao">Entrar</button>
+  <p class="erro" id="erroLogin" role="alert"></p>
+</form>
+
+<div class="estrutura" id="painel" hidden>
+  <aside class="lateral">
+    <span class="logo"><i></i>CRM de Leads</span>
+    <nav>
+      <button class="aba" id="abaDashboard" aria-current="page">Dashboard</button>
+      <button class="aba" id="abaLeads">Leads</button>
+    </nav>
+    <button class="botao leve" id="sair">Sair</button>
+  </aside>
+
+  <main class="conteudo">
+    <p class="erro" id="erroPainel" role="alert"></p>
+
+    <section id="telaDashboard">
+      <div class="cabecalho">
+        <h1>Dashboard</h1>
+        <div class="acoes">
+          <div class="segmentos produtos" role="group" aria-label="Produto"></div>
+          <div class="segmentos" id="periodos" role="group" aria-label="Período"></div>
+          <button class="botao leve atualizar">Atualizar</button>
+        </div>
+      </div>
+      <div class="indicadores" id="indicadores"></div>
+      <div class="grade" id="graficos"></div>
+    </section>
+
+    <section id="telaLeads" hidden>
+      <div class="cabecalho">
+        <h1>Leads</h1>
+        <div class="acoes">
+          <div class="segmentos produtos" role="group" aria-label="Produto"></div>
+          <input id="busca" type="search" placeholder="Buscar nome ou WhatsApp" aria-label="Buscar">
+          <select id="filtro" aria-label="Filtrar por temperatura">
+            <option value="">Todos</option>
+            <option value="quente">Quentes</option>
+            <option value="morno">Mornos</option>
+            <option value="frio">Frios</option>
+          </select>
+          <button class="botao leve atualizar">Atualizar</button>
+        </div>
+      </div>
+      <div class="quadro" id="quadro"></div>
+    </section>
+  </main>
+</div>
+
+<dialog class="modal" id="modalExcluir" aria-labelledby="modalTitulo">
+  <form method="dialog">
+    <div class="sobretitulo">Atenção</div>
+    <h2 id="modalTitulo">Excluir este lead?</h2>
+    <div class="modal-lead">
+      <strong id="modalNome"></strong>
+      <span class="pequeno suave" id="modalDetalhe"></span>
+    </div>
+    <p class="suave">Os dados e as anotações serão apagados definitivamente. Essa ação não pode ser desfeita.</p>
+    <div class="modal-acoes">
+      <button class="botao leve" id="modalCancelar" value="cancelar">Cancelar</button>
+      <button class="botao excluir" value="excluir">Excluir lead</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script src="ui.js"></script>
+<script>
+const COLUNAS = [["novo", "Novo"], ["contato", "Em contato"], ["negociando", "Negociando"], ["vendido", "Vendido"], ["perdido", "Perdido"]];
+const TEMPERATURAS = [["quente", "Quente"], ["morno", "Morno"], ["frio", "Frio"]];
+const PERIODOS = [[7, "7 dias"], [30, "30 dias"], [90, "90 dias"], [0, "Tudo"]];
+const PRODUTOS = [["", "Todos"], ["carro", "Carro"], ["imovel", "Imóvel"]];
+const NOME_PRODUTO = { carro: "Carro", imovel: "Imóvel" };
+const ORDEM = { quente: 0, morno: 1, frio: 2 };
+const DIA = 864e5;
+const $ = id => document.getElementById(id);
+let leads = [];
+let periodo = 30;
+let produto = "";
+
+async function api(caminho, metodo = "GET", dados) {
+  const resposta = await fetch(caminho, {
+    method: metodo,
+    headers: dados ? { "Content-Type": "application/json" } : {},
+    body: dados ? JSON.stringify(dados) : undefined,
+  });
+  const corpo = await resposta.json();
+  if (resposta.status === 401 && caminho !== "/api/login") { mostrarLogin(); throw new Error("sessão"); }
+  if (!resposta.ok) throw new Error(corpo.erro || "Não foi possível concluir.");
+  return corpo;
+}
+
+function mostrarLogin() {
+  $("painel").hidden = true;
+  $("login").hidden = false;
+  $("senha").focus();
+}
+
+function telefone(d) {
+  return `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
+}
+
+function linkConversa(l) {
+  const texto = `Oi, ${l.nome}! Aqui é ${CONFIG.consultor}, consultor ${CONFIG.administradora}. Vi sua simulação para ${l.motivo} e separei algumas opções para você.`;
+  return `https://wa.me/55${l.whatsapp}?text=${encodeURIComponent(texto)}`;
+}
+
+function linkExterno(l, texto) {
+  const a = el("a", "", texto);
+  a.href = linkConversa(l);
+  a.target = "_blank";
+  a.rel = "noopener";
+  return a;
+}
+
+function selo(temperatura) {
+  const s = el("span", "selo");
+  s.append(el("span", `ponto ${temperatura}`), temperatura);
+  return s;
+}
+
+function inicioDoDia(data) {
+  const d = new Date(data);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+const doProduto = l => !produto || l.objetivo === produto;
+
+function leadsDoPeriodo() {
+  const inicio = periodo ? inicioDoDia(Date.now() - (periodo - 1) * DIA).getTime() : 0;
+  return leads.filter(l => doProduto(l) && new Date(l.criado_em).getTime() >= inicio);
+}
+
+// Agrupa por dia; acima de 45 dias agrupa por semana para as barras continuarem legíveis.
+function serieDeLeads(lista) {
+  const hoje = inicioDoDia(Date.now()).getTime();
+  const maisAntigo = lista.reduce((m, l) => Math.min(m, inicioDoDia(l.criado_em).getTime()), hoje);
+  const dias = periodo || Math.round((hoje - maisAntigo) / DIA) + 1;
+  const passo = dias > 45 ? 7 : 1;
+  const total = Math.ceil(dias / passo);
+  const serie = Array.from({ length: total }, (_, i) => ({ inicio: hoje - (total - 1 - i) * passo * DIA, total: 0 }));
+  lista.forEach(l => {
+    const indice = total - 1 - Math.floor((hoje - inicioDoDia(l.criado_em).getTime()) / (passo * DIA));
+    if (serie[indice]) serie[indice].total += 1;
+  });
+  return { serie, passo };
+}
+
+const dataCurta = t => new Date(t).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+const contagem = n => `${n} ${n === 1 ? "lead" : "leads"}`;
+
+function cartaoLeadsPorDia(lista) {
+  const { serie, passo } = serieDeLeads(lista);
+  const maximo = Math.max(...serie.map(s => s.total), 1);
+  const rotuloData = s => passo === 1 ? dataCurta(s.inicio) : `Semana de ${dataCurta(s.inicio)}`;
+  const c = el("div", "cartao oito");
+  c.append(el("h3", "", passo === 1 ? "Leads por dia" : "Leads por semana"));
+
+  const colunas = el("div", "colunas");
+  serie.forEach(s => {
+    const dia = el("div", "dia");
+    const barra = el("div");
+    barra.style.height = s.total ? `${Math.max(s.total / maximo * 100, 3)}%` : "0";
+    dia.append(barra);
+    dica(dia, `${rotuloData(s)}: ${contagem(s.total)}`);
+    colunas.append(dia);
+  });
+  const eixo = el("div", "eixo");
+  eixo.append(el("span", "", dataCurta(serie[0].inicio)), el("span", "", `Máximo: ${contagem(maximo)}`), el("span", "", dataCurta(serie.at(-1).inicio)));
+
+  const tabela = el("details");
+  tabela.append(el("summary", "", "Ver tabela"));
+  const t = el("table");
+  const corpo = el("tbody");
+  serie.filter(s => s.total).reverse().forEach(s => {
+    const linha = el("tr");
+    linha.append(el("th", "", rotuloData(s)), el("td", "", s.total));
+    corpo.append(linha);
+  });
+  t.append(corpo);
+  tabela.append(t);
+  c.append(colunas, eixo, tabela);
+  return c;
+}
+
+function cartaoTemperatura(lista) {
+  const c = el("div", "cartao quatro");
+  c.append(el("h3", "", "Temperatura"));
+  const faixa = el("div", "faixa");
+  const legenda = el("div", "legenda");
+  TEMPERATURAS.forEach(([valor, nome]) => {
+    const total = lista.filter(l => l.temperatura === valor).length;
+    const parte = Math.round(total / lista.length * 100);
+    if (total) {
+      const pedaco = el("div", valor);
+      pedaco.style.flex = total;
+      dica(pedaco, `${nome}: ${contagem(total)} (${parte}%)`);
+      faixa.append(pedaco);
+    }
+    const linha = el("div");
+    linha.append(el("span", `ponto ${valor}`), nome, el("b", "", `${total} · ${parte}%`));
+    legenda.append(linha);
+  });
+  c.append(faixa, legenda);
+  return c;
+}
+
+function cartaoFunil(lista) {
+  const c = el("div", "cartao seis");
+  c.append(el("h3", "", "Funil de vendas"));
+  c.append(barras(COLUNAS.map(([valor, nome]) => {
+    const total = lista.filter(l => l.status === valor).length;
+    return { rotulo: nome, valor: total, texto: String(total), detalhe: `${nome}: ${contagem(total)}`, neutra: valor === "perdido" };
+  })));
+  return c;
+}
+
+function cartaoMotivos(lista) {
+  const c = el("div", "cartao seis");
+  c.append(el("h3", "", "O que os leads querem"));
+  const grupos = {};
+  lista.forEach(l => { grupos[l.motivo] = (grupos[l.motivo] || 0) + 1; });
+  c.append(barras(Object.entries(grupos).sort((a, b) => b[1] - a[1]).map(([motivo, total]) => ({
+    rotulo: motivo[0].toUpperCase() + motivo.slice(1), valor: total, texto: String(total), detalhe: `${motivo}: ${contagem(total)}`,
+  }))));
+  return c;
+}
+
+function cartaoChamar(lista) {
+  const c = el("div", "cartao doze");
+  c.append(el("h3", "", "Chamar agora"));
+  const quentes = lista.filter(l => l.temperatura === "quente" && l.status === "novo")
+    .sort((a, b) => b.criado_em.localeCompare(a.criado_em)).slice(0, 5);
+  if (!quentes.length) c.append(el("div", "vazio", "Nenhum lead quente aguardando contato"));
+  quentes.forEach(l => {
+    const linha = el("div", "chamar");
+    const texto = el("div");
+    texto.append(el("strong", "", l.nome), el("div", "suave pequeno", `${NOME_PRODUTO[l.objetivo]} · ${reais(l.valor)} · ${l.quando}`));
+    linha.append(texto, linkExterno(l, "Chamar no WhatsApp"));
+    c.append(linha);
+  });
+  return c;
+}
+
+function desenharDashboard() {
+  $("periodos").replaceChildren(...PERIODOS.map(([dias, nome]) => {
+    const b = el("button", "", nome);
+    b.setAttribute("aria-pressed", dias === periodo);
+    b.onclick = () => { periodo = dias; desenharDashboard(); };
+    return b;
+  }));
+
+  const lista = leadsDoPeriodo();
+  const soma = status => lista.filter(l => l.status === status).reduce((t, l) => t + l.valor, 0);
+  const vendidos = lista.filter(l => l.status === "vendido").length;
+  const aguardando = lista.filter(l => l.temperatura === "quente" && l.status === "novo").length;
+  $("indicadores").replaceChildren(
+    indicador("Leads", String(lista.length), "no período"),
+    indicador("Quentes aguardando", String(aguardando), "ainda sem contato", true),
+    indicador("Em negociação", reais(soma("negociando")), "em crédito desejado"),
+    indicador("Vendido", reais(soma("vendido")), `${vendidos} ${vendidos === 1 ? "venda" : "vendas"}`),
+    indicador("Conversão", lista.length ? `${(vendidos / lista.length * 100).toFixed(1).replace(".", ",")}%` : "0%", "leads que viraram venda"),
+  );
+
+  if (!lista.length) {
+    const vazio = el("div", "cartao doze");
+    vazio.append(el("div", "vazio", "Nenhum lead neste período"));
+    return $("graficos").replaceChildren(vazio);
+  }
+  $("graficos").replaceChildren(cartaoLeadsPorDia(lista), cartaoTemperatura(lista), cartaoFunil(lista), cartaoMotivos(lista), cartaoChamar(lista));
+}
+
+async function salvar(lead, mudancas) {
+  $("erroPainel").textContent = "";
+  try {
+    Object.assign(lead, await api(`/api/leads/${lead.id}`, "PATCH", mudancas));
+  } catch (e) {
+    if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+  }
+}
+
+function confirmarExclusao(l) {
+  const modal = $("modalExcluir");
+  $("modalNome").textContent = l.nome;
+  $("modalDetalhe").textContent = `${NOME_PRODUTO[l.objetivo]} · ${telefone(l.whatsapp)}`;
+  modal.returnValue = "";
+  modal.showModal();
+  $("modalCancelar").focus();
+  return new Promise(resolver => {
+    modal.onclose = () => resolver(modal.returnValue === "excluir");
+  });
+}
+
+function estrategiaResumo(l) {
+  const plano = planoDeLance(l.objetivo, l.valor, l.reserva);
+  return `Estratégia: ${plano.nome} (${Math.round(plano.total * 100)}%, ${reais(plano.valorTotal)})`;
+}
+
+function cartaoLead(l) {
+  const c = el("article", "lead");
+  const topo = el("div", "lead-topo");
+  topo.append(el("strong", "", l.nome), selo(l.temperatura));
+
+  const status = el("select");
+  status.setAttribute("aria-label", `Etapa de ${l.nome}`);
+  COLUNAS.forEach(([valor, nome]) => {
+    const opcao = el("option", "", nome);
+    opcao.value = valor;
+    status.append(opcao);
+  });
+  status.value = l.status;
+  status.onchange = async () => { await salvar(l, { status: status.value }); desenhar(); };
+
+  const detalhes = el("details");
+  detalhes.append(el("summary", "", l.notas ? "Anotações (1)" : "Anotações"));
+  const notas = el("textarea");
+  notas.value = l.notas;
+  notas.setAttribute("aria-label", `Anotações de ${l.nome}`);
+  notas.onchange = () => salvar(l, { notas: notas.value });
+  detalhes.append(notas);
+
+  const excluir = el("button", "apagar", "Excluir lead");
+  excluir.setAttribute("aria-label", `Excluir ${l.nome}`);
+  excluir.onclick = async () => {
+    if (!await confirmarExclusao(l)) return;
+    $("erroPainel").textContent = "";
+    try {
+      await api(`/api/leads/${l.id}`, "DELETE");
+      leads = leads.filter(x => x.id !== l.id);
+      desenhar();
+    } catch (e) {
+      if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+    }
+  };
+
+  c.append(
+    topo,
+    el("p", "", `${NOME_PRODUTO[l.objetivo]} · Quer ${l.motivo}: ${reais(l.valor)}`),
+    el("p", "", `Parcela até ${reais(l.parcela)} (estimada ${reais(l.parcela_estimada)})`),
+    el("p", "", `Lance: ${l.reserva} · Prazo: ${l.quando}`),
+    el("p", "", estrategiaResumo(l)),
+    ...(l.aluguel ? [el("p", "", `Paga ${reais(l.aluguel)} de aluguel`)] : []),
+    el("p", "", new Date(l.atualizado_em).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })),
+    linkExterno(l, `WhatsApp ${telefone(l.whatsapp)}`), status, detalhes, excluir,
+  );
+  return c;
+}
+
+function desenharQuadro() {
+  const busca = $("busca").value.trim().toLowerCase();
+  const digitos = busca.replace(/\D/g, "");
+  const visiveis = leads
+    .filter(doProduto)
+    .filter(l => !$("filtro").value || l.temperatura === $("filtro").value)
+    .filter(l => !busca || l.nome.toLowerCase().includes(busca) || (digitos && l.whatsapp.includes(digitos)))
+    .sort((a, b) => ORDEM[a.temperatura] - ORDEM[b.temperatura] || b.atualizado_em.localeCompare(a.atualizado_em));
+
+  $("quadro").replaceChildren(...COLUNAS.map(([valor, nome]) => {
+    const itens = visiveis.filter(l => l.status === valor);
+    const coluna = el("section", "coluna");
+    const titulo = el("h2");
+    titulo.append(el("span", "", nome), el("span", "suave", itens.length));
+    coluna.append(titulo);
+    if (itens.length) coluna.append(...itens.map(cartaoLead));
+    else coluna.append(el("div", "vazio", "Nenhum lead aqui"));
+    return coluna;
+  }));
+}
+
+function desenharProdutos() {
+  document.querySelectorAll(".produtos").forEach(grupo => {
+    grupo.replaceChildren(...PRODUTOS.map(([valor, nome]) => {
+      const b = el("button", "", nome);
+      b.setAttribute("aria-pressed", valor === produto);
+      b.onclick = () => { produto = valor; desenhar(); };
+      return b;
+    }));
+  });
+}
+
+function desenhar() {
+  desenharProdutos();
+  desenharDashboard();
+  desenharQuadro();
+}
+
+function abrir(tela) {
+  const dashboard = tela === "dashboard";
+  $("telaDashboard").hidden = !dashboard;
+  $("telaLeads").hidden = dashboard;
+  $("abaDashboard").toggleAttribute("aria-current", dashboard);
+  $("abaLeads").toggleAttribute("aria-current", !dashboard);
+  (dashboard ? $("abaDashboard") : $("abaLeads")).setAttribute("aria-current", "page");
+}
+
+async function carregar() {
+  try {
+    leads = await api("/api/leads");
+    $("login").hidden = true;
+    $("painel").hidden = false;
+    $("erroPainel").textContent = "";
+    desenhar();
+  } catch (e) {
+    if (e.message !== "sessão") $("erroPainel").textContent = e.message;
+  }
+}
+
+$("login").onsubmit = async e => {
+  e.preventDefault();
+  $("erroLogin").textContent = "";
+  try {
+    await api("/api/login", "POST", { senha: $("senha").value });
+    $("senha").value = "";
+    carregar();
+  } catch (erro) {
+    $("erroLogin").textContent = erro.message;
+  }
+};
+$("modalExcluir").onclick = e => { if (e.target === $("modalExcluir")) $("modalExcluir").close(); };
+$("abaDashboard").onclick = () => abrir("dashboard");
+$("abaLeads").onclick = () => abrir("leads");
+document.querySelectorAll(".atualizar").forEach(b => { b.onclick = carregar; });
+$("sair").onclick = async () => { await api("/api/logout", "POST", {}); leads = []; mostrarLogin(); };
+$("busca").oninput = desenharQuadro;
+$("filtro").onchange = desenharQuadro;
+carregar();
+</script>
+</body>
+</html>
