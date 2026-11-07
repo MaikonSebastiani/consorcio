@@ -171,20 +171,19 @@ function parcelaEstimada(objetivo, valor) {
   return Math.round(valor * (1 + c.taxaAdministracao + c.fundoReserva) / c.prazoMeses);
 }
 
-// Prioriza quem tem pressa, reserva para lance e orçamento compatível.
-function temperatura({ quando, reserva, parcela }, estimada) {
-  let pontos = 0;
-  if (quando === "em até 6 meses") pontos += 2;
-  if (quando === "em 6 a 12 meses") pontos += 1;
-  if (reserva !== "nenhum") pontos += 2;
+// Prioriza quem tem mais reserva para lance e uma parcela que cabe no orçamento.
+const PONTOS_RESERVA = [["até 10%", 1], ["de 10% a 30%", 2], ["mais de 30%", 3]];
+
+function temperatura({ reserva, parcela }, estimada) {
+  let pontos = PONTOS_RESERVA.find(([inicio]) => reserva.startsWith(inicio))?.[1] ?? 0;
   if (parcela >= estimada) pontos += 1;
-  return pontos >= 4 ? "quente" : pontos >= 2 ? "morno" : "frio";
+  return pontos >= 3 ? "quente" : pontos >= 1 ? "morno" : "frio";
 }
 
 function leadValido(l) {
   const texto = (v, max) => typeof v === "string" && v.trim().length >= 2 && v.length <= max;
   return PRODUTOS.includes(l.objetivo) && texto(l.nome, 80) && l.consentimento === true
-    && texto(l.motivo, 60) && texto(l.reserva, 60) && texto(l.quando, 60)
+    && texto(l.motivo, 60) && texto(l.reserva, 60)
     && Number.isInteger(l.valor) && l.valor > 0 && l.valor <= 5000000
     && Number.isInteger(l.parcela) && l.parcela > 0 && l.parcela <= 100000
     && (l.aluguel === undefined || (Number.isInteger(l.aluguel) && l.aluguel >= 0 && l.aluguel <= 100000));
@@ -204,6 +203,7 @@ async function receberLead(request, env) {
   const carta = cartaIndicada(CONFIG[l.objetivo].cartas, l.valor);
   const estimada = parcelaEstimada(l.objetivo, carta);
   // Quem refaz a simulação atualiza o lead existente e mantém status e anotações.
+  // A coluna "quando" fica vazia: a pergunta de prazo saiu do quiz, mas leads antigos ainda têm o valor.
   await env.DB.prepare(`INSERT INTO leads
     (nome, whatsapp, objetivo, motivo, valor, carta, parcela, parcela_estimada, reserva, quando, temperatura, aluguel, consentimento_em, criado_em, atualizado_em)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -211,7 +211,7 @@ async function receberLead(request, env) {
       nome = excluded.nome, motivo = excluded.motivo, valor = excluded.valor, carta = excluded.carta, parcela = excluded.parcela,
       parcela_estimada = excluded.parcela_estimada, reserva = excluded.reserva, quando = excluded.quando,
       temperatura = excluded.temperatura, aluguel = excluded.aluguel, consentimento_em = excluded.consentimento_em, atualizado_em = excluded.atualizado_em`)
-    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, carta, l.parcela, estimada, l.reserva, l.quando,
+    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, carta, l.parcela, estimada, l.reserva, "",
       temperatura(l, estimada), l.aluguel ?? 0, agora, agora, agora)
     .run();
   return json({ ok: true }, 201);

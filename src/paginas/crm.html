@@ -319,7 +319,7 @@ function cartaoChamar(lista) {
   quentes.forEach(l => {
     const linha = el("div", "chamar");
     const texto = el("div");
-    texto.append(el("strong", "", l.nome), el("div", "suave pequeno", `${NOME_PRODUTO[l.objetivo]} · ${reais(l.valor)} · ${l.quando}`));
+    texto.append(el("strong", "", l.nome), el("div", "suave pequeno", [NOME_PRODUTO[l.objetivo], reais(l.valor), l.quando].filter(Boolean).join(" · ")));
     linha.append(texto, linkExterno(l, "Chamar no WhatsApp"));
     c.append(linha);
   });
@@ -422,7 +422,7 @@ function cartaoLead(l) {
     el("p", "", `${NOME_PRODUTO[l.objetivo]} · Quer ${l.motivo}: ${reais(l.valor)}`),
     ...(l.carta ? [el("p", "", `Carta indicada: ${reais(l.carta)}`)] : []),
     el("p", "", `Parcela até ${reais(l.parcela)} (estimada ${reais(l.parcela_estimada)})`),
-    el("p", "", `Lance: ${l.reserva} · Prazo: ${l.quando}`),
+    el("p", "", `Lance: ${l.reserva}${l.quando ? ` · Prazo: ${l.quando}` : ""}`),
     el("p", "", estrategiaResumo(l)),
     ...(l.aluguel ? [el("p", "", `Paga ${reais(l.aluguel)} de aluguel`)] : []),
     el("p", "", new Date(l.atualizado_em).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })),

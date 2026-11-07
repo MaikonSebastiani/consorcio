@@ -114,12 +114,6 @@ const barraCta = document.getElementById("barraCta");
 const respostas = {};
 const lead = {};
 
-const QUANDO = [
-  ["em até 6 meses", "Em até 6 meses"],
-  ["em 6 a 12 meses", "Em 6 a 12 meses"],
-  ["em 1 a 2 anos", "Em 1 a 2 anos"],
-  ["sem pressa", "Sem pressa"],
-];
 
 const PRODUTOS = {
   carro: {
@@ -144,7 +138,6 @@ const PRODUTOS = {
         ["de 10% a 30% do carro", "De 10% a 30%"],
         ["mais de 30% do carro", "Mais de 30%"],
       ]},
-      { id: "quando", titulo: "Quando você quer estar com o carro?", opcoes: QUANDO },
     ],
   },
   imovel: {
@@ -170,7 +163,6 @@ const PRODUTOS = {
         ["de 10% a 30% do imóvel", "De 10% a 30%"],
         ["mais de 30% do imóvel", "Mais de 30%"],
       ]},
-      { id: "quando", titulo: "Quando você quer estar no seu imóvel?", opcoes: QUANDO },
     ],
   },
 };
@@ -400,15 +392,12 @@ function tabelaPlano(r, carta) {
 function cartaoEstrategia(r, carta) {
   const plano = planoDeLance(produto, carta, respostas.reserva);
   const guardar = Math.ceil(r.parcelaConsorcio * 0.2 / 10) * 10;
-  const pressa = respostas.quando === "em até 6 meses" || respostas.quando === "em 6 a 12 meses";
   const passosLance = [
     plano.proprio
       ? `Use cerca de ${reais(plano.valorProprio)} da sua reserva como lance livre.`
       : `Comece pelo sorteio e guarde ${reais(guardar)} por mês: em 12 meses são ${reais(guardar * 12)} para o lance.`,
     plano.embutido && `Some até ${reais(plano.valorEmbutido)} de lance embutido, se o plano permitir. Essa parte sai da carta, então o crédito que você recebe diminui.`,
-    pressa
-      ? "Como seu prazo é curto, oferte lance desde as primeiras assembleias."
-      : "Com mais prazo, aumente o lance aos poucos e escolha o melhor momento para ofertar.",
+    "Concorra desde a primeira assembleia: quanto antes você entra, mais chances tem de ser contemplado.",
     `${CONFIG.consultor} acompanha os resultados das assembleias com você e ajusta o lance ao longo do plano.`,
   ].filter(Boolean);
 
