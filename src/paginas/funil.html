@@ -168,7 +168,7 @@ const PRODUTOS = {
     exemploTexto: "um imóvel",
     quandoRecebe: "Quando pega o imóvel",
     quandoFinanciamento: entrada => `Após aprovação do banco, com ${entrada} de entrada`,
-    aviso: " No imóvel, parcela e crédito são reajustados por índice ao longo do plano, e o financiamento também pode ter correção, o que muda os totais.",
+    aviso: " No imóvel, parcela e crédito são reajustados por índice.",
     passos: [
       { id: "motivo", titulo: "O que você quer fazer?", opcoes: [
         ["sair do aluguel", "Sair do aluguel"],
@@ -432,23 +432,23 @@ function cartaoEstrategia(r, carta) {
   const guardar = Math.ceil(r.parcelaConsorcio * 0.2 / 10) * 10;
   const passosLance = [
     plano.proprio
-      ? `Use cerca de ${reais(plano.valorProprio)} da sua reserva como lance livre.`
-      : `Comece pelo sorteio e guarde ${reais(guardar)} por mês: em 12 meses são ${reais(guardar * 12)} para o lance.`,
-    plano.embutido && `Some até ${reais(plano.valorEmbutido)} de lance embutido, se o plano permitir. Essa parte sai da carta, então o crédito que você recebe diminui.`,
-    "Concorra desde a primeira assembleia: quanto antes você entra, mais chances tem de ser contemplado.",
-    "Acompanhamos os resultados das assembleias com você e ajustamos o lance ao longo do plano.",
+      ? `Lance livre de cerca de ${reais(plano.valorProprio)} da sua reserva.`
+      : `Concorra no sorteio e guarde ${reais(guardar)} por mês para o lance.`,
+    plano.embutido && `Até ${reais(plano.valorEmbutido)} de lance embutido, que sai da carta.`,
+    "Concorra desde a primeira assembleia.",
+    "Acompanhamos cada assembleia e ajustamos o lance com você.",
   ].filter(Boolean);
 
   const c = el("div", "cartao inteiro estrategia");
   const texto = el("div");
   const lista = el("ol");
   passosLance.forEach(p => lista.append(el("li", "", p)));
-  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), ...(plano.media ? [el("div", "media", `Média de ${plano.media} até a contemplação nessa estratégia`)] : []), el("p", "suave", "Personalizada para buscar a contemplação mais cedo, com acompanhamento do início ao fim."), lista);
+  texto.append(el("div", "sobretitulo", "Sua estratégia de lance"), el("div", "perda", plano.nome), ...(plano.media ? [el("div", "media", `Média de ${plano.media} até a contemplação nessa estratégia`)] : []), lista);
 
   const numeros = el("div");
   numeros.append(el("h3", "", "Lance que você pode montar"), el("p", "pequeno suave", plano.total ? `Cerca de ${reais(plano.valorTotal)} sobre a carta de ${reais(carta)}` : "Hoje a sua chance vem do sorteio"));
   numeros.append(barras([{ rotulo: "Seu lance possível", valor: plano.total * 100, texto: `${Math.round(plano.total * 100)}%`, detalhe: `Lance possível: ${Math.round(plano.total * 100)}% da carta` }]));
-  numeros.append(el("p", "pequeno suave legal", `Estimativa. ${plano.media ? "Médias de referência, não são promessa de prazo. " : ""}O resultado de cada assembleia depende dos lances ofertados, e nenhuma estratégia garante contemplação.`));
+  numeros.append(el("p", "pequeno suave legal", "Estimativa. Nenhuma estratégia garante contemplação."));
   c.append(texto, numeros);
   return c;
 }
@@ -457,8 +457,8 @@ function cartaoEspera(chances, carta) {
   const c = el("div", "cartao metade");
   c.append(el("h3", "", "O que você perde deixando para depois"));
   const { media } = planoDeLance(produto, carta, respostas.reserva);
-  const textoChances = `Cada mês fora do consórcio é uma assembleia em que você não concorre: nem pelo sorteio, nem com a estratégia de lance e o nosso acompanhamento. Quem entra daqui a 1 ano perde ${chances} chances.`;
-  const textoMedia = media && `Na sua estratégia, a média de referência é de ${media} até a contemplação. Adiar 1 ano faz essa contagem começar 12 meses depois.`;
+  const textoChances = `Cada mês fora é uma assembleia sem concorrer. Em 1 ano, são ${chances} chances.`;
+  const textoMedia = media && `Na sua estratégia, a média é de ${media}. Adiar 1 ano adia essa contagem.`;
   if (produto === "carro") {
     c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []));
     return c;
@@ -466,7 +466,7 @@ function cartaoEspera(chances, carta) {
   const aluguelAno = (respostas.aluguel || 0) * 12;
   const alta = respostas.valor * dados.altaAnual;
   const partes = [aluguelAno && `${reais(aluguelAno)} de aluguel`, `${reais(alta)} de alta do imóvel, se subir ${Math.round(dados.altaAnual * 100)}% no ano`].filter(Boolean);
-  c.append(el("div", "perda", `${chances} chances e ${reais(aluguelAno + alta)} a menos`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []), el("p", "suave", `Em 12 meses de espera, são ${partes.join(" e ")}.`));
+  c.append(el("div", "perda", `${chances} chances e ${reais(aluguelAno + alta)} a menos`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []), el("p", "suave", `Em 12 meses: ${partes.join(" e ")}.`));
   return c;
 }
 
@@ -500,14 +500,13 @@ function telaResultado() {
   const proximo = el("div", "cartao metade confirmacao");
   proximo.append(
     el("h3", "", "Recebemos seu plano"),
-    el("p", "suave", "Vamos chamar você no WhatsApp para marcar uma conversa rápida."),
     el("p", "suave", cabe
-      ? "Nela mostramos as condições disponíveis para você começar pagando ainda menos até a contemplação."
-      : "A parcela acima é a cheia. Na conversa, mostramos as condições para começar com uma parcela que caiba no seu orçamento até a contemplação."),
+      ? "Vamos chamar você no WhatsApp para mostrar como começar pagando ainda menos até a contemplação."
+      : "Essa é a parcela cheia. Vamos chamar você no WhatsApp para mostrar como começar com uma parcela que caiba no seu orçamento."),
   );
   painel.append(espera, proximo);
 
-  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. A contemplação ocorre por sorteio ou lance e não tem data garantida. A estratégia de lance é uma sugestão e não garante contemplação. Taxas, prazos e condições são confirmados no contrato da ${CONFIG.administradora}.${P.aviso}`));
+  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Contemplação sem data garantida. Condições confirmadas no contrato da ${CONFIG.administradora}.${P.aviso}`));
   window.scrollTo(0, 0);
 }
 
