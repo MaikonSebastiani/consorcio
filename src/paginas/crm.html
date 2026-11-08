@@ -38,10 +38,10 @@
   .cartao details { margin-top: 12px; font-size: .84rem; }
   summary { cursor: pointer; color: var(--suave); font-weight: 700; }
   .cartao details table { margin-top: 8px; }
-  .faixa { display: flex; gap: 2px; height: 16px; margin-top: 18px; }
-  .faixa div { min-width: 3px; }
-  .faixa div:first-child { border-radius: 4px 0 0 4px; }
-  .faixa div:last-child { border-radius: 0 4px 4px 0; }
+  .barra-temperatura { display: flex; gap: 2px; height: 16px; margin-top: 18px; }
+  .barra-temperatura div { min-width: 3px; }
+  .barra-temperatura div:first-child { border-radius: 4px 0 0 4px; }
+  .barra-temperatura div:last-child { border-radius: 0 4px 4px 0; }
   .legenda { display: grid; gap: 8px; margin-top: 14px; font-size: .86rem; }
   .legenda div { display: flex; align-items: center; gap: 8px; }
   .legenda b { margin-left: auto; font-variant-numeric: tabular-nums; }
@@ -271,7 +271,7 @@ function cartaoLeadsPorDia(lista) {
 function cartaoTemperatura(lista) {
   const c = el("div", "cartao quatro");
   c.append(el("h3", "", "Temperatura"));
-  const faixa = el("div", "faixa");
+  const barra = el("div", "barra-temperatura");
   const legenda = el("div", "legenda");
   TEMPERATURAS.forEach(([valor, nome]) => {
     const total = lista.filter(l => l.temperatura === valor).length;
@@ -280,13 +280,13 @@ function cartaoTemperatura(lista) {
       const pedaco = el("div", valor);
       pedaco.style.flex = total;
       dica(pedaco, `${nome}: ${contagem(total)} (${parte}%)`);
-      faixa.append(pedaco);
+      barra.append(pedaco);
     }
     const linha = el("div");
     linha.append(el("span", `ponto ${valor}`), nome, el("b", "", `${total} · ${parte}%`));
     legenda.append(linha);
   });
-  c.append(faixa, legenda);
+  c.append(barra, legenda);
   return c;
 }
 
