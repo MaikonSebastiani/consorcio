@@ -28,7 +28,9 @@
     "CRM_HOST": "consorcio.gruposaitama.com.br",
     // Preencher com os dados do aplicativo criado no Cloudflare Access para o CRM.
     "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    "ACCESS_AUD": "",
+    // Parcela reduzida em relação à cheia (cerca de 60% nos posts de 2026). Só o CRM usa; o site nunca mostra.
+    "FATOR_PARCELA_REDUZIDA": "0.6"
   }
   // Na publicação, adicionar:
   // "routes": [

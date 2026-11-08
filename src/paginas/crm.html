@@ -66,6 +66,7 @@
   .lead select { width: 100%; padding: 8px; border: 1px solid var(--linha); border-radius: 8px; background: var(--painel); }
   .lead details { margin-top: 8px; }
   .lead textarea { width: 100%; min-height: 76px; margin-top: 8px; padding: 8px; border: 1px solid var(--linha); border-radius: 8px; background: var(--painel); resize: vertical; }
+  .lead p.reuniao { color: var(--ouro-claro); font-weight: 700; }
   .apagar { display: block; margin-top: 8px; background: none; border: 0; color: var(--erro); padding: 6px 0; font-size: .82rem; font-weight: 700; cursor: pointer; }
 
   .modal { width: min(420px, calc(100vw - 32px)); padding: 0; background: var(--painel); color: var(--tinta); border: 1px solid var(--linha); border-radius: 16px; }
@@ -421,7 +422,10 @@ function cartaoLead(l) {
     topo,
     el("p", "", `${NOME_PRODUTO[l.objetivo]} · Quer ${l.motivo}: ${reais(l.valor)}`),
     ...(l.carta ? [el("p", "", `Carta indicada: ${reais(l.carta)}`)] : []),
-    el("p", "", `Parcela até ${reais(l.parcela)} (estimada ${reais(l.parcela_estimada)})`),
+    el("p", "", `Parcela até ${reais(l.parcela)} (cheia ${reais(l.parcela_estimada)})`),
+    ...(l.parcela_reduzida ? [el("p", "reuniao", l.parcela < l.parcela_estimada && l.parcela >= l.parcela_reduzida
+      ? `Cabe só na reduzida (${reais(l.parcela_reduzida)}): leve essa condição para a reunião.`
+      : `Reduzida para a reunião: ${reais(l.parcela_reduzida)}`)] : []),
     el("p", "", `Lance: ${l.reserva}${l.quando ? ` · Prazo: ${l.quando}` : ""}`),
     el("p", "", estrategiaResumo(l)),
     ...(l.aluguel ? [el("p", "", `Paga ${reais(l.aluguel)} de aluguel`)] : []),

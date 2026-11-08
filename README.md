@@ -37,7 +37,9 @@ O site abre em `http://localhost:4173` e o CRM em `http://localhost:4173/crm`. E
 
 ## Configuração
 
-Os valores em `src/config.mjs` são **de exemplo**. Enquanto `modoExemplo` for `true`, o site mostra um aviso de demonstração e pede para não ser indexado pelo Google.
+Os valores em `src/config.mjs` são **de referência**, tirados de posts de consultores Ademicon em 2026, e precisam ser confirmados com o gestor.
+
+A parcela reduzida não aparece no site: o percentual fica em `FATOR_PARCELA_REDUZIDA`, no `wrangler.jsonc`, e é usado só no CRM, para levar à reunião. Enquanto `modoExemplo` for `true`, o site mostra um aviso de demonstração e pede para não ser indexado pelo Google.
 
 ## Publicação
 

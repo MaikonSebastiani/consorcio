@@ -200,12 +200,12 @@ function parcelaEstimada(objetivo, valor) {
   return Math.round(valor * (1 + c.taxaAdministracao + c.fundoReserva) / c.prazoMeses);
 }
 
-// Prioriza quem tem mais reserva para lance e uma parcela que cabe no orçamento.
+// Prioriza quem tem mais reserva para lance e cabe ao menos na parcela reduzida, que é a usada para fechar.
 const PONTOS_RESERVA = [["até 10%", 1], ["de 10% a 30%", 2], ["mais de 30%", 3]];
 
-function temperatura({ reserva, parcela }, estimada) {
+function temperatura({ reserva, parcela }, reduzida) {
   let pontos = PONTOS_RESERVA.find(([inicio]) => reserva.startsWith(inicio))?.[1] ?? 0;
-  if (parcela >= estimada) pontos += 1;
+  if (parcela >= reduzida) pontos += 1;
   return pontos >= 3 ? "quente" : pontos >= 1 ? "morno" : "frio";
 }
 
@@ -231,17 +231,18 @@ async function receberLead(request, env) {
   const agora = new Date().toISOString();
   const carta = cartaIndicada(CONFIG[l.objetivo].cartas, l.valor);
   const estimada = parcelaEstimada(l.objetivo, carta);
+  const reduzida = Math.round(estimada * (Number(env.FATOR_PARCELA_REDUZIDA) || 1));
   // Quem refaz a simulação atualiza o lead existente e mantém status e anotações.
   // A coluna "quando" fica vazia: a pergunta de prazo saiu do quiz, mas leads antigos ainda têm o valor.
   await env.DB.prepare(`INSERT INTO leads
-    (nome, whatsapp, objetivo, motivo, valor, carta, parcela, parcela_estimada, reserva, quando, temperatura, aluguel, consentimento_em, criado_em, atualizado_em)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (nome, whatsapp, objetivo, motivo, valor, carta, parcela, parcela_estimada, parcela_reduzida, reserva, quando, temperatura, aluguel, consentimento_em, criado_em, atualizado_em)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(whatsapp, objetivo) DO UPDATE SET
       nome = excluded.nome, motivo = excluded.motivo, valor = excluded.valor, carta = excluded.carta, parcela = excluded.parcela,
-      parcela_estimada = excluded.parcela_estimada, reserva = excluded.reserva, quando = excluded.quando,
+      parcela_estimada = excluded.parcela_estimada, parcela_reduzida = excluded.parcela_reduzida, reserva = excluded.reserva, quando = excluded.quando,
       temperatura = excluded.temperatura, aluguel = excluded.aluguel, consentimento_em = excluded.consentimento_em, atualizado_em = excluded.atualizado_em`)
-    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, carta, l.parcela, estimada, l.reserva, "",
-      temperatura(l, estimada), l.aluguel ?? 0, agora, agora, agora)
+    .bind(l.nome.trim(), l.whatsapp, l.objetivo, l.motivo, l.valor, carta, l.parcela, estimada, reduzida, l.reserva, "",
+      temperatura(l, reduzida), l.aluguel ?? 0, agora, agora, agora)
     .run();
   return json({ ok: true }, 201);
 }

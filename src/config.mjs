@@ -18,21 +18,23 @@ export default {
   siteUrl: "",
 
   carro: {
-    // EXEMPLO: substitua pela tabela vigente.
-    consorcio: { prazoMeses: 80, taxaAdministracao: 0.18, fundoReserva: 0.02 },
+    // REFERÊNCIA: plano de até 90 meses e custo total de cerca de 16% (taxa + fundo), calculado
+    // a partir de posts de consultores. Confirme com o gestor antes de publicar.
+    consorcio: { prazoMeses: 90, taxaAdministracao: 0.14, fundoReserva: 0.02 },
     // EXEMPLO: taxa média de mercado que você quer usar na comparação.
     financiamento: { prazoMeses: 60, jurosMensal: 0.019, entrada: 0.2 },
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
     // EXEMPLO: parte da carta que pode virar lance embutido. Use 0 se o grupo não permitir.
     lanceEmbutidoMax: 0.25,
-    // EXEMPLO: valores de carta disponíveis. O site indica a menor carta que cobre o valor do carro.
-    cartas: [50000, 70000, 90000, 110000, 130000, 160000, 200000, 250000, 300000],
+    // REFERÊNCIA: cartas vistas em posts de 2026. O site indica a menor carta que cobre o valor do carro.
+    cartas: [60000, 80000, 90000, 100000, 125000, 150000, 180000, 200000, 250000, 300000],
   },
 
   imovel: {
-    // EXEMPLO: substitua pela tabela vigente.
-    consorcio: { prazoMeses: 200, taxaAdministracao: 0.22, fundoReserva: 0.02 },
+    // REFERÊNCIA: 220 meses e custo total de 24,2% (ex.: carta de R$ 100 mil soma R$ 124.200),
+    // conforme posts de consultores em 2026. Confirme com o gestor antes de publicar.
+    consorcio: { prazoMeses: 220, taxaAdministracao: 0.222, fundoReserva: 0.02 },
     // EXEMPLO: taxa média de mercado que você quer usar na comparação.
     financiamento: { prazoMeses: 360, jurosMensal: 0.0095, entrada: 0.2 },
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
@@ -41,7 +43,7 @@ export default {
     lanceEmbutidoMax: 0.25,
     // EXEMPLO: estimativa de alta anual do preço do imóvel.
     altaAnual: 0.06,
-    // EXEMPLO: valores de carta disponíveis. O site indica a menor carta que cobre o valor do imóvel.
-    cartas: [150000, 200000, 250000, 300000, 350000, 400000, 500000, 600000, 800000, 1000000, 1500000],
+    // REFERÊNCIA: tabela "Investimentos 2026" (R$ 100 mil a R$ 1 milhão, de 50 em 50 mil) e a carta de R$ 80 mil.
+    cartas: [80000, ...Array.from({ length: 19 }, (_, i) => 100000 + i * 50000)],
   },
 };
