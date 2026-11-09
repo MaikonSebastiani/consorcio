@@ -23,8 +23,8 @@ const PAGINAS = {
   "/veiculo": {
     modelo: paginaFunil,
     conteudo: conteudoVeiculo,
-    imagem: "/img/hero-carro.webp",
-    imagemCelular: "/img/hero-carro-celular.webp",
+    imagem: "/img/hero-veiculo.webp",
+    imagemCelular: "/img/hero-veiculo-celular.webp",
     titulo: "Consórcio de veículo: carro, moto ou caminhão sem juros",
     descricao: "Simule consórcio de carro, moto, caminhão ou utilitário, compare com o financiamento e receba uma estratégia de lance personalizada em 60 segundos.",
   },
