@@ -15,6 +15,8 @@ export default {
   telefone: "(11) 95371-3310",
   // WhatsApp de atendimento: DDI + DDD + número, só dígitos.
   whatsapp: "5511953713310",
+  // Google Ads (conta SebastianiImoveis): tag do site e a conversão "Lead consórcio (site)", separada dos empreendimentos.
+  googleAds: { id: "AW-18388777321", conversaoLead: "AW-18388777321/noVJCPujpLUdEOnyucBE" },
   // Endereço final do site, sem barra no fim. Ex.: https://www.seusite.com.br
   siteUrl: "https://gruposaitama.com.br",
 

@@ -390,6 +390,8 @@ function telaContato() {
     enviar.textContent = "Enviando...";
     try {
       await enviarLead(isca.value);
+      // Conta o lead no Google Ads só depois de salvo no CRM.
+      if (window.gtag && CONFIG.googleAds?.conversaoLead) gtag("event", "conversion", { send_to: CONFIG.googleAds.conversaoLead });
       telaResultado();
     } catch (falha) {
       erro.textContent = falha.message;

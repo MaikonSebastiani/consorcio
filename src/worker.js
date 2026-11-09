@@ -167,11 +167,19 @@ function rodape() {
 </div></footer>`;
 }
 
+// Tag do Google Ads, só no site público. Carrega sem bloquear a página.
+function tagGoogleAds() {
+  const id = CONFIG.googleAds?.id;
+  if (!id) return "";
+  return `\n<script async src="https://www.googletagmanager.com/gtag/js?id=${escapar(id)}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config",${JSON.stringify(id)});</script>`;
+}
+
 function renderizar(rota) {
   const pagina = PAGINAS[rota];
   const contato = [CONFIG.email, CONFIG.telefone].filter(Boolean).map(escapar).join(" ou ");
   const valores = {
-    meta: metaTags(rota, pagina),
+    meta: metaTags(rota, pagina) + tagGoogleAds(),
     aviso: CONFIG.modoExemplo ? '<div class="aviso-exemplo">DEMONSTRAÇÃO: taxas e cartas de exemplo. Não divulgue esta versão.</div>' : "",
     conteudo: "",
     rodape: rodape(),
