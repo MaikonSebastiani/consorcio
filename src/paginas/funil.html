@@ -79,6 +79,8 @@
   .media { display: inline-block; margin: 6px 0 10px; padding: 6px 12px; border-radius: 8px; background: var(--ouro-fundo); border: 1px solid #6b5a30; color: var(--ouro-claro); font-weight: 800; font-size: .92rem; }
   .confirmacao { border-color: #4d7363; }
   .confirmacao h3 { color: var(--salvia); }
+  .whats-adiantar { margin-top: 16px; background: #1f8a4c; color: #fff; }
+  .whats-adiantar:hover { background: #26a35b; }
   .legal { margin-top: 16px; }
 
   @media (min-width: 821px) { .barra-cta { display: none; } }
@@ -504,6 +506,13 @@ function telaResultado() {
       ? "Vamos chamar você no WhatsApp para mostrar como começar pagando ainda menos até a contemplação."
       : "Essa é a parcela cheia. Vamos chamar você no WhatsApp para mostrar como começar com uma parcela que caiba no seu orçamento."),
   );
+  // Opcional: quem tem pressa já chama a equipe. O lead já foi salvo no CRM antes desta tela.
+  if (CONFIG.whatsapp) {
+    const mensagem = `Oi! Fiz a simulação de consórcio de ${P.bem.toLowerCase()} no site (carta de ${reais(carta)}) e quero falar sobre as condições.`;
+    const adiantar = el("a", "botao whats-adiantar", "Quer adiantar? Fale agora no WhatsApp");
+    Object.assign(adiantar, { href: `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(mensagem)}`, target: "_blank", rel: "noopener" });
+    proximo.append(adiantar);
+  }
   painel.append(espera, proximo);
 
   app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Financiamento calculado pela taxa média do Banco Central (${dados.fonteJuros}). Contemplação sem data garantida. Condições confirmadas no contrato da ${CONFIG.administradora}.${P.aviso}`));

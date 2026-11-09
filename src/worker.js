@@ -150,7 +150,12 @@ function metaTags(rota, { titulo, descricao, imagem, imagemCelular, conteudo }) 
 }
 
 function rodape() {
-  const contatos = [CONFIG.email, CONFIG.telefone].filter(Boolean).map(escapar).join(" · ");
+  const contatos = [
+    CONFIG.email && `<a href="mailto:${escapar(CONFIG.email)}">${escapar(CONFIG.email)}</a>`,
+    CONFIG.telefone && (CONFIG.whatsapp
+      ? `<a href="https://wa.me/${escapar(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp ${escapar(CONFIG.telefone)}</a>`
+      : escapar(CONFIG.telefone)),
+  ].filter(Boolean).join(" · ");
   const documento = CONFIG.documento ? ` · ${escapar(CONFIG.documento)}` : "";
   return `<footer class="rodape"><div>
   <p><strong>${escapar(CONFIG.marca)}</strong>${documento} · Consultoria em consórcio${contatos ? ` · ${contatos}` : ""}</p>

@@ -13,7 +13,9 @@ export default {
   // Aparecem no rodapé e na política de privacidade. Preencha antes de publicar.
   documento: "", // CPF ou CNPJ, se quiser exibir
   email: "contato@gruposaitama.com.br",
-  telefone: "",
+  telefone: "(11) 95371-3310",
+  // WhatsApp de atendimento: DDI + DDD + número, só dígitos.
+  whatsapp: "5511953713310",
   // Endereço final do site, sem barra no fim. Ex.: https://www.seusite.com.br
   siteUrl: "https://gruposaitama.com.br",
 
