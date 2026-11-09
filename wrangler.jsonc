@@ -17,7 +17,7 @@
       "binding": "DB",
       "database_name": "consorcio-leads",
       // Preencher com o ID gerado por `npm run banco:criar` na publicação.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "bf2fbe5a-8663-402a-b641-91ba0aaf6e53",
       "migrations_dir": "migrations"
     }
   ],
@@ -26,15 +26,14 @@
   ],
   "vars": {
     "CRM_HOST": "consorcio.gruposaitama.com.br",
-    // Preencher com os dados do aplicativo criado no Cloudflare Access para o CRM.
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": "",
+    // Aplicativo do Cloudflare Access "consorcio.gruposaitama.com.br" (só libera o e-mail do Maikon).
+    "ACCESS_TEAM_DOMAIN": "plain-grass-964d.cloudflareaccess.com",
+    "ACCESS_AUD": "6211b5b205d7b8931a40924f61c377f29ceaf62c67b0c8356f41ab63fa91842f",
     // Parcela reduzida em relação à cheia (cerca de 60% nos posts de 2026). Só o CRM usa; o site nunca mostra.
     "FATOR_PARCELA_REDUZIDA": "0.6"
-  }
-  // Na publicação, adicionar:
-  // "routes": [
-  //   { "pattern": "gruposaitama.com.br", "custom_domain": true },
-  //   { "pattern": "consorcio.gruposaitama.com.br", "custom_domain": true }
-  // ]
+  },
+  "routes": [
+    { "pattern": "gruposaitama.com.br", "custom_domain": true },
+    { "pattern": "consorcio.gruposaitama.com.br", "custom_domain": true }
+  ]
 }

@@ -1,2 +1,3 @@
-# Só para desenvolvimento local: abre o CRM em /crm sem o Cloudflare Access.
 DEV_SEM_ACCESS=1
+# No local, o endereço do CRM não existe; o CRM abre em /crm.
+CRM_HOST=crm-desativado.localhost

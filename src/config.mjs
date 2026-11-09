@@ -1,7 +1,7 @@
 // Tudo que você precisa editar fica neste arquivo. O navegador recebe estes dados em /config.js.
 export default {
   // Mude para false só depois de trocar as taxas e as cartas pelos dados reais do seu gestor.
-  modoExemplo: true,
+  modoExemplo: false,
 
   // Nome que aparece no site, no CRM e na política de privacidade.
   marca: "Grupo Saitama",
@@ -12,10 +12,10 @@ export default {
 
   // Aparecem no rodapé e na política de privacidade. Preencha antes de publicar.
   documento: "", // CPF ou CNPJ, se quiser exibir
-  email: "",
+  email: "contato@gruposaitama.com.br",
   telefone: "",
   // Endereço final do site, sem barra no fim. Ex.: https://www.seusite.com.br
-  siteUrl: "",
+  siteUrl: "https://gruposaitama.com.br",
 
   carro: {
     // Gestor: carta + 16% (taxa + fundo), em até 80 meses.
