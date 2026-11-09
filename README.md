@@ -43,16 +43,17 @@ A parcela reduzida não aparece no site: o percentual fica em `FATOR_PARCELA_RED
 
 ## Publicação
 
-O site vai para `gruposaitama.com.br` **só quando estiver finalizado**. Decisões já tomadas:
+Publicado em 09/11/2026 no Cloudflare:
 
-- o site atual da consultoria imobiliária (Worker `lpscorretagem`) sai do ar quando o consórcio ocupar a home;
-- o CRM de empreendimentos (`saitama-crm`) passa a abrir em `imoveis.gruposaitama.com.br`, e `crm.gruposaitama.com.br` é removido;
-- o CRM de consórcio fica em `consorcio.gruposaitama.com.br`, com banco separado.
+- `gruposaitama.com.br`: site de consórcio (Worker `consorcio`)
+- `consorcio.gruposaitama.com.br`: CRM de consórcio, com login pelo Cloudflare Access e banco D1 `consorcio-leads`
+- `imoveis.gruposaitama.com.br`: CRM de empreendimentos (Worker `saitama-crm`); os endereços antigos `crm.gruposaitama.com.br` e `crm.sebastianiimoveis.com.br` foram removidos
+- `contato@gruposaitama.com.br`: encaminhado pelo Email Routing do Cloudflare
 
-Antes de publicar:
+Para publicar uma mudança:
 
-1. Trocar os dados de exemplo em `src/config.mjs`, definir `modoExemplo: false` e `siteUrl: "https://gruposaitama.com.br"`.
-2. Resolver a pergunta de prazo do quiz, já que o conteúdo diz que não existe data de contemplação.
-3. Criar o banco com `npm run banco:criar`, colocar o ID em `wrangler.jsonc` e rodar `npm run banco:remoto`.
-4. Criar no Cloudflare Access um aplicativo para `consorcio.gruposaitama.com.br` e preencher `ACCESS_TEAM_DOMAIN` e `ACCESS_AUD` em `wrangler.jsonc`. Sem esses dados, o CRM fica fechado.
-5. Ativar as rotas comentadas em `wrangler.jsonc`, tirar `gruposaitama.com.br` do Worker `lpscorretagem` e publicar com `npm run publicar`.
+```bash
+npx wrangler deploy
+```
+
+Se mudar a tabela de leads, crie uma nova migração em `migrations/` e rode `npm run banco:remoto` antes do deploy.
