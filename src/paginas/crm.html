@@ -160,8 +160,8 @@
 const COLUNAS = [["novo", "Novo"], ["contato", "Em contato"], ["negociando", "Negociando"], ["vendido", "Vendido"], ["perdido", "Perdido"]];
 const TEMPERATURAS = [["quente", "Quente"], ["morno", "Morno"], ["frio", "Frio"]];
 const PERIODOS = [[7, "7 dias"], [30, "30 dias"], [90, "90 dias"], [0, "Tudo"]];
-const PRODUTOS = [["", "Todos"], ["carro", "Carro"], ["imovel", "Imóvel"]];
-const NOME_PRODUTO = { carro: "Carro", imovel: "Imóvel" };
+const PRODUTOS = [["", "Todos"], ["veiculo", "Veículo"], ["imovel", "Imóvel"]];
+const NOME_PRODUTO = { veiculo: "Veículo", imovel: "Imóvel" };
 const ORDEM = { quente: 0, morno: 1, frio: 2 };
 const DIA = 864e5;
 const $ = id => document.getElementById(id);
@@ -304,7 +304,8 @@ function cartaoMotivos(lista) {
   const c = el("div", "cartao seis");
   c.append(el("h3", "", "O que os leads querem"));
   const grupos = {};
-  lista.forEach(l => { grupos[l.motivo] = (grupos[l.motivo] || 0) + 1; });
+  // Agrupa pelo motivo sem o tipo de veículo entre parênteses.
+  lista.forEach(l => { const m = l.motivo.replace(/ \(.*\)$/, ""); grupos[m] = (grupos[m] || 0) + 1; });
   c.append(barras(Object.entries(grupos).sort((a, b) => b[1] - a[1]).map(([motivo, total]) => ({
     rotulo: motivo[0].toUpperCase() + motivo.slice(1), valor: total, texto: String(total), detalhe: `${motivo}: ${contagem(total)}`,
   }))));

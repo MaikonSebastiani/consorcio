@@ -18,7 +18,7 @@
 
   .capa { position: relative; margin-top: -72px; padding: 112px 0 56px; }
   .capa::before { content: ""; position: absolute; inset: 0; background: right center / cover no-repeat; opacity: .38; }
-  .capa-carro::before { background-image: url(/img/hero-carro.webp); }
+  .capa-veiculo::before { background-image: url(/img/hero-carro.webp); }
   .capa-imovel::before { background-image: url(/img/hero-imovel.webp); }
   .capa::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, var(--fundo) 0, transparent 22%), linear-gradient(90deg, var(--fundo) 0, transparent 55%); }
   .capa-grade { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; width: min(1048px, 100% - 32px); margin: 0 auto; }
@@ -89,7 +89,7 @@
     body.com-barra .rodape { padding-bottom: 72px; }
     .capa { padding: 150px 0 40px; }
     .capa::before { background-size: auto 340px; background-position: right top; opacity: .5; }
-    .capa-carro::before { background-image: url(/img/hero-carro-celular.webp); }
+    .capa-veiculo::before { background-image: url(/img/hero-carro-celular.webp); }
     .capa-imovel::before { background-image: url(/img/hero-imovel-celular.webp); }
     .capa::after { background: linear-gradient(180deg, transparent 0, transparent 150px, var(--fundo) 330px); }
     .capa-grade { grid-template-columns: minmax(0, 1fr); gap: 32px; }
@@ -140,27 +140,33 @@ const lead = {};
 
 
 const PRODUTOS = {
-  carro: {
-    bem: "Carro",
+  veiculo: {
+    bem: "Veículo",
     exemplo: 90000,
-    exemploTexto: "um carro",
-    quandoRecebe: "Quando pega o carro",
+    exemploTexto: "um veículo",
+    quandoRecebe: "Quando pega o veículo",
     quandoFinanciamento: entrada => `Na hora, com ${entrada} de entrada`,
     aviso: "",
     passos: [
-      { id: "motivo", titulo: "O que você quer fazer?", opcoes: [
-        ["comprar meu primeiro carro", "Comprar meu primeiro carro"],
-        ["trocar de carro", "Trocar de carro"],
-        ["ter um carro para trabalhar", "Ter um carro para trabalhar"],
-        ["comprar um carro para a família", "Comprar um carro para a família"],
+      { id: "tipo", titulo: "Qual veículo você quer?", opcoes: [
+        ["carro", "Carro"],
+        ["moto", "Moto"],
+        ["caminhão ou utilitário", "Caminhão ou utilitário"],
+        ["van, ônibus ou outro", "Van, ônibus ou outro"],
       ]},
-      { id: "valor", titulo: "Quanto custa o carro que você quer?", min: 80000, max: 500000, passo: 5000, inicial: 90000, atalhos: [80000, 100000, 150000, 200000] },
+      { id: "motivo", titulo: "Para que você quer?", opcoes: [
+        ["comprar o primeiro", "Comprar o meu primeiro"],
+        ["trocar o atual", "Trocar o que eu tenho"],
+        ["trabalhar", "Trabalhar (aplicativo, entregas, frete)"],
+        ["uso da família", "Uso da família"],
+      ]},
+      { id: "valor", titulo: "Quanto custa o veículo que você quer?", min: 80000, max: 500000, passo: 5000, inicial: 90000, atalhos: [80000, 100000, 150000, 200000] },
       { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 300, max: 5000, passo: 50, inicial: 1000, atalhos: [800, 1200, 1800, 2500] },
       { id: "reserva", titulo: "Você tem algum valor guardado para dar de lance?", opcoes: [
         ["nenhum", "Ainda não tenho"],
-        ["até 10% do carro", "Até 10% do valor do carro"],
-        ["de 10% a 30% do carro", "De 10% a 30%"],
-        ["mais de 30% do carro", "Mais de 30%"],
+        ["até 10% do veículo", "Até 10% do valor do veículo"],
+        ["de 10% a 30% do veículo", "De 10% a 30%"],
+        ["mais de 30% do veículo", "Mais de 30%"],
       ]},
     ],
   },
@@ -191,7 +197,7 @@ const PRODUTOS = {
   },
 };
 
-const produto = location.pathname.startsWith("/imovel") ? "imovel" : "carro";
+const produto = location.pathname.startsWith("/imovel") ? "imovel" : "veiculo";
 const P = PRODUTOS[produto];
 const dados = CONFIG[produto];
 const passos = P.passos;
@@ -396,13 +402,18 @@ function telaContato() {
   window.scrollTo(0, 0);
 }
 
+// No veículo, o CRM recebe também o tipo: "trabalhar (moto)".
+function motivoDoLead() {
+  return respostas.tipo ? `${respostas.motivo} (${respostas.tipo})` : respostas.motivo;
+}
+
 async function enviarLead(site) {
   let resposta;
   try {
     resposta = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...lead, ...respostas, objetivo: produto, consentimento: true, site }),
+      body: JSON.stringify({ ...lead, ...respostas, motivo: motivoDoLead(), objetivo: produto, consentimento: true, site }),
     });
   } catch {
     throw new Error("Sem conexão. Tente de novo.");
@@ -461,7 +472,7 @@ function cartaoEspera(chances, carta) {
   const { media } = planoDeLance(produto, carta, respostas.reserva);
   const textoChances = `Cada mês fora é uma assembleia sem concorrer. Em 1 ano, são ${chances} chances.`;
   const textoMedia = media && `Na sua estratégia, a média é de ${media}. Adiar 1 ano adia essa contagem.`;
-  if (produto === "carro") {
+  if (produto === "veiculo") {
     c.append(el("div", "perda", `${chances} chances a menos por ano`), el("p", "suave", textoChances), ...(textoMedia ? [el("p", "suave", textoMedia)] : []));
     return c;
   }
@@ -508,7 +519,7 @@ function telaResultado() {
   );
   // Opcional: quem tem pressa já chama a equipe. O lead já foi salvo no CRM antes desta tela.
   if (CONFIG.whatsapp) {
-    const mensagem = `Oi! Fiz a simulação de consórcio de ${P.bem.toLowerCase()} no site (carta de ${reais(carta)}) e quero falar sobre as condições.`;
+    const mensagem = `Oi! Fiz a simulação de consórcio de ${(respostas.tipo || P.bem).toLowerCase()} no site (carta de ${reais(carta)}) e quero falar sobre as condições.`;
     const adiantar = el("a", "botao whats-adiantar", "Quer adiantar? Fale agora no WhatsApp");
     Object.assign(adiantar, { href: `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(mensagem)}`, target: "_blank", rel: "noopener" });
     proximo.append(adiantar);

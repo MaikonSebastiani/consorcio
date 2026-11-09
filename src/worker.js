@@ -4,27 +4,29 @@ import paginaInicial from "./paginas/index.html";
 import paginaFunil from "./paginas/funil.html";
 import paginaPrivacidade from "./paginas/privacidade.html";
 import paginaCrm from "./paginas/crm.html";
-import conteudoCarro from "./paginas/conteudo-carro.html";
+import conteudoVeiculo from "./paginas/conteudo-veiculo.html";
 import conteudoImovel from "./paginas/conteudo-imovel.html";
 import estiloCss from "../public/estilo.css";
 import uiJs from "../public/ui.js";
 
 const STATUS = ["novo", "contato", "negociando", "vendido", "perdido"];
-const PRODUTOS = ["carro", "imovel"];
+const PRODUTOS = ["veiculo", "imovel"];
+// Endereços antigos que continuam funcionando com redirecionamento permanente.
+const REDIRECIONAMENTOS = { "/carro": "/veiculo" };
 
 const PAGINAS = {
   "/": {
     modelo: paginaInicial,
-    titulo: "Consórcio de carro e imóvel com estratégia de lance",
-    descricao: "Simule consórcio de carro ou imóvel, compare com financiamento e receba uma estratégia de lance personalizada. Sem compromisso.",
+    titulo: "Consórcio de veículo e imóvel com estratégia de lance",
+    descricao: "Simule consórcio de veículo (carro, moto, caminhão) ou imóvel, compare com financiamento e receba uma estratégia de lance personalizada. Sem compromisso.",
   },
-  "/carro": {
+  "/veiculo": {
     modelo: paginaFunil,
-    conteudo: conteudoCarro,
+    conteudo: conteudoVeiculo,
     imagem: "/img/hero-carro.webp",
     imagemCelular: "/img/hero-carro-celular.webp",
-    titulo: "Consórcio de carro: simule parcela e estratégia de lance",
-    descricao: "Simule seu consórcio de carro, compare com o financiamento e receba uma estratégia de lance personalizada em 60 segundos.",
+    titulo: "Consórcio de veículo: carro, moto ou caminhão sem juros",
+    descricao: "Simule consórcio de carro, moto, caminhão ou utilitário, compare com o financiamento e receba uma estratégia de lance personalizada em 60 segundos.",
   },
   "/imovel": {
     modelo: paginaFunil,
@@ -82,6 +84,7 @@ async function rotear(request, env) {
     return /^\/(estilo\.css|ui\.js|regras\.mjs|favicon\.svg|fonts\/[\w.-]+\.woff2)$/.test(caminho) ? arquivoEstatico(request, env, caminho) : json({ erro: "Não encontrado." }, 404);
   }
 
+  if (metodo === "GET" && REDIRECIONAMENTOS[caminho]) return Response.redirect(new URL(REDIRECIONAMENTOS[caminho] + url.search, url), 301);
   if (metodo === "GET" && PAGINAS[caminho]) return html(renderizar(caminho));
   if (metodo === "POST" && caminho === "/api/leads") return receberLead(request, env);
   if (metodo === "GET" && caminho === "/robots.txt") return texto(robots(), "text/plain");

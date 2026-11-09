@@ -19,18 +19,19 @@ export default {
   // Endereço final do site, sem barra no fim. Ex.: https://www.seusite.com.br
   siteUrl: "https://gruposaitama.com.br",
 
-  carro: {
+  // Veículo: carro, moto, caminhão, utilitário e outros veículos de transporte.
+  veiculo: {
     // Gestor: carta + 16% (taxa + fundo), em até 80 meses.
     consorcio: { prazoMeses: 80, taxaAdministracao: 0.14, fundoReserva: 0.02 },
     // Banco Central, set/2026: taxa média de aquisição de veículos para pessoa física (SGS 25471), 1,96% ao mês.
-    // Prazo de 72 meses, o maior oferecido por bancos para carro.
+    // Prazo de 72 meses, o maior oferecido por bancos para veículo.
     financiamento: { prazoMeses: 72, jurosMensal: 0.0196, entrada: 0.2 },
     fonteJuros: "veículos, set/2026",
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
-    // Gestor: lance embutido de até 25% da carta no carro.
+    // Gestor: lance embutido de até 25% da carta no veículo.
     lanceEmbutidoMax: 0.25,
-    // REFERÊNCIA: cartas vistas em posts de 2026. O site indica a menor carta que cobre o valor do carro.
+    // REFERÊNCIA: cartas vistas em posts de 2026. O site indica a menor carta que cobre o valor do veículo.
     cartas: [80000, 90000, 100000, 125000, 150000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000],
   },
 

@@ -1,13 +1,13 @@
 # Consórcio: funil de simulação e CRM
 
-Site para captar leads de consórcio de carro e imóvel, com simulação, estratégia de lance personalizada e um CRM com dashboard. Roda como um **Cloudflare Worker**, no mesmo padrão do `saitama-crm`: arquivos estáticos servidos pelo Worker, banco **D1** e login pelo **Cloudflare Access**.
+Site para captar leads de consórcio de veículo (carro, moto, caminhão, utilitário) e imóvel, com simulação, estratégia de lance personalizada e um CRM com dashboard. Roda como um **Cloudflare Worker**, no mesmo padrão do `saitama-crm`: arquivos estáticos servidos pelo Worker, banco **D1** e login pelo **Cloudflare Access**.
 
 ## Endereços
 
 | Endereço | O que é |
 |---|---|
-| `gruposaitama.com.br` | Home com a escolha entre carro e imóvel |
-| `gruposaitama.com.br/carro` e `/imovel` | Conteúdo, quiz e painel da simulação |
+| `gruposaitama.com.br` | Home com a escolha entre veículo e imóvel |
+| `gruposaitama.com.br/veiculo` e `/imovel` (o antigo `/carro` redireciona para `/veiculo`) | Conteúdo, quiz e painel da simulação |
 | `gruposaitama.com.br/privacidade` | Política de privacidade |
 | `consorcio.gruposaitama.com.br` | CRM com dashboard e quadro de leads, protegido pelo Cloudflare Access |
 
