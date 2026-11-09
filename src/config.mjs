@@ -18,9 +18,8 @@ export default {
   siteUrl: "",
 
   carro: {
-    // REFERÊNCIA: plano de até 90 meses e custo total de cerca de 16% (taxa + fundo), calculado
-    // a partir de posts de consultores. Confirme com o gestor antes de publicar.
-    consorcio: { prazoMeses: 90, taxaAdministracao: 0.14, fundoReserva: 0.02 },
+    // Gestor: carta + 16% (taxa + fundo), em até 80 meses.
+    consorcio: { prazoMeses: 80, taxaAdministracao: 0.14, fundoReserva: 0.02 },
     // EXEMPLO: taxa média de mercado que você quer usar na comparação.
     financiamento: { prazoMeses: 60, jurosMensal: 0.019, entrada: 0.2 },
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
@@ -43,7 +42,7 @@ export default {
     lanceEmbutidoMax: 0.25,
     // EXEMPLO: estimativa de alta anual do preço do imóvel.
     altaAnual: 0.06,
-    // REFERÊNCIA: tabela "Investimentos 2026" (R$ 100 mil a R$ 1 milhão, de 50 em 50 mil) e a carta de R$ 80 mil.
-    cartas: [80000, ...Array.from({ length: 19 }, (_, i) => 100000 + i * 50000)],
+    // Gestor: imóvel começa na carta de R$ 100 mil e vai até R$ 1 milhão, de 50 em 50 mil.
+    cartas: Array.from({ length: 19 }, (_, i) => 100000 + i * 50000),
   },
 };
