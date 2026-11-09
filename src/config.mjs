@@ -21,7 +21,8 @@ export default {
     // Gestor: carta + 16% (taxa + fundo), em até 80 meses.
     consorcio: { prazoMeses: 80, taxaAdministracao: 0.14, fundoReserva: 0.02 },
     // Banco Central, set/2026: taxa média de aquisição de veículos para pessoa física (SGS 25471), 1,96% ao mês.
-    financiamento: { prazoMeses: 60, jurosMensal: 0.0196, entrada: 0.2 },
+    // Prazo de 72 meses, o maior oferecido por bancos para carro.
+    financiamento: { prazoMeses: 72, jurosMensal: 0.0196, entrada: 0.2 },
     fonteJuros: "veículos, set/2026",
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
@@ -36,7 +37,8 @@ export default {
     // A divisão entre taxa e fundo não muda a parcela; o que vale é o total de 24%.
     consorcio: { prazoMeses: 220, taxaAdministracao: 0.22, fundoReserva: 0.02 },
     // Banco Central, set/2026: taxa média do financiamento imobiliário para pessoa física, total (SGS 25499), 0,90% ao mês.
-    financiamento: { prazoMeses: 360, jurosMensal: 0.009, entrada: 0.2 },
+    // Prazo de 420 meses (35 anos), o padrão atual do financiamento imobiliário.
+    financiamento: { prazoMeses: 420, jurosMensal: 0.009, entrada: 0.2 },
     fonteJuros: "imobiliário, set/2026",
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
