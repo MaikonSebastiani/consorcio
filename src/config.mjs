@@ -32,9 +32,9 @@ export default {
   },
 
   imovel: {
-    // REFERÊNCIA: 220 meses e custo total de 24,2% (ex.: carta de R$ 100 mil soma R$ 124.200),
-    // conforme posts de consultores em 2026. Confirme com o gestor antes de publicar.
-    consorcio: { prazoMeses: 220, taxaAdministracao: 0.222, fundoReserva: 0.02 },
+    // Tabela do gestor: carta + 24% dividido por 220 meses (ex.: R$ 100 mil + 24% = R$ 124.000 / 220 = R$ 563,64).
+    // A divisão entre taxa e fundo não muda a parcela; o que vale é o total de 24%.
+    consorcio: { prazoMeses: 220, taxaAdministracao: 0.22, fundoReserva: 0.02 },
     // EXEMPLO: taxa média de mercado que você quer usar na comparação.
     financiamento: { prazoMeses: 360, jurosMensal: 0.0095, entrada: 0.2 },
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
