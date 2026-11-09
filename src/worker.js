@@ -161,8 +161,8 @@ function rodape() {
   ].filter(Boolean).join(" · ");
   const documento = CONFIG.documento ? ` · ${escapar(CONFIG.documento)}` : "";
   return `<footer class="rodape"><div>
-  <p><strong>${escapar(CONFIG.marca)}</strong>${documento} · Consultoria em consórcio${contatos ? ` · ${contatos}` : ""}</p>
-  <p>Consórcio administrado pela ${escapar(CONFIG.administradora)}. Simulações são estimativas. A contemplação ocorre por sorteio ou lance e não tem data garantida. Médias de contemplação são referências, não promessa de prazo.</p>
+  <p><strong>${escapar(CONFIG.marca)}</strong>${documento} · Especialistas em consórcio${contatos ? ` · ${contatos}` : ""}</p>
+  <p>Consórcios de administradoras autorizadas pelo Banco Central. Simulações são estimativas. A contemplação ocorre por sorteio ou lance e não tem data garantida. Médias de contemplação são referências, não promessa de prazo.</p>
   <p><a href="/privacidade">Política de privacidade</a></p>
 </div></footer>`;
 }
@@ -180,7 +180,6 @@ function renderizar(rota) {
     scripts: `<script>const CONFIG = ${JSON.stringify(CONFIG).replace(/</g, "\\u003c")};</script>\n<script>${uiJs}</script>`,
     marca: escapar(CONFIG.marca),
     logoMarca: "<svg class=\"marca-s\" viewBox=\"0 0 40 40\" aria-hidden=\"true\"><defs><linearGradient id=\"marca-ouro\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f0dca8\"/><stop offset=\".55\" stop-color=\"#d4af5a\"/><stop offset=\"1\" stop-color=\"#a8822f\"/></linearGradient></defs><rect width=\"40\" height=\"40\" rx=\"10\" fill=\"url(#marca-ouro)\"/><path d=\"M27 13.2C25.4 11.5 23 10.5 20 10.5c-4.2 0-7 2.2-7 5.3 0 3.2 3 4.2 7 4.8 4.2.6 7 1.8 7 4.8 0 3.1-3 5.1-7 5.1-3.1 0-5.6-1-7.2-2.7\" fill=\"none\" stroke=\"#16181b\" stroke-width=\"4.2\" stroke-linecap=\"round\"/></svg>",
-    administradora: escapar(CONFIG.administradora),
     documentoTexto: CONFIG.documento ? `, ${escapar(CONFIG.documento)}` : "",
     mediaHibrido: escapar(CONFIG.mediasContemplacao.hibrido),
     mediaEmbutido: escapar(CONFIG.mediasContemplacao.embutido),

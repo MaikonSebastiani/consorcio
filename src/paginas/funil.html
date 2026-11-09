@@ -120,7 +120,7 @@
     <a href="#comparativo">Comparativo</a>
     <a href="#duvidas">Dúvidas</a>
   </nav>
-  <span class="pequeno suave">Consultoria em consórcio</span>
+  <span class="pequeno suave">Especialistas em consórcio</span>
 </header>
 <main class="pagina" id="pagina">
 {{conteudo}}
@@ -526,7 +526,7 @@ function telaResultado() {
   }
   painel.append(espera, proximo);
 
-  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Financiamento calculado pela taxa média do Banco Central (${dados.fonteJuros}). Contemplação sem data garantida. Condições confirmadas no contrato da ${CONFIG.administradora}.${P.aviso}`));
+  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Financiamento calculado pela taxa média do Banco Central (${dados.fonteJuros}). Contemplação sem data garantida. Condições confirmadas no contrato da administradora.${P.aviso}`));
   window.scrollTo(0, 0);
 }
 

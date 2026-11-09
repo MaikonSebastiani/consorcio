@@ -5,7 +5,6 @@ export default {
 
   // Nome que aparece no site, no CRM e na política de privacidade.
   marca: "Grupo Saitama",
-  administradora: "Ademicon",
 
   // Médias de contemplação por estratégia, usadas como referência no site. Não são promessa de prazo.
   mediasContemplacao: { hibrido: "24 meses", embutido: "24 a 36 meses" },
