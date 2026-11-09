@@ -152,7 +152,7 @@ const PRODUTOS = {
         ["ter um carro para trabalhar", "Ter um carro para trabalhar"],
         ["comprar um carro para a família", "Comprar um carro para a família"],
       ]},
-      { id: "valor", titulo: "Quanto custa o carro que você quer?", min: 80000, max: 300000, passo: 5000, inicial: 90000, atalhos: [80000, 100000, 150000, 200000] },
+      { id: "valor", titulo: "Quanto custa o carro que você quer?", min: 80000, max: 500000, passo: 5000, inicial: 90000, atalhos: [80000, 100000, 150000, 200000] },
       { id: "parcela", titulo: "Quanto cabe no seu mês, sem apertar?", min: 300, max: 5000, passo: 50, inicial: 1000, atalhos: [800, 1200, 1800, 2500] },
       { id: "reserva", titulo: "Você tem algum valor guardado para dar de lance?", opcoes: [
         ["nenhum", "Ainda não tenho"],
@@ -506,7 +506,7 @@ function telaResultado() {
   );
   painel.append(espera, proximo);
 
-  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Contemplação sem data garantida. Condições confirmadas no contrato da ${CONFIG.administradora}.${P.aviso}`));
+  app.replaceChildren(topo, numeros, painel, el("p", "pequeno suave legal", `Valores estimados, sem seguro e sem reajustes. Financiamento calculado pela taxa média do Banco Central (${dados.fonteJuros}). Contemplação sem data garantida. Condições confirmadas no contrato da ${CONFIG.administradora}.${P.aviso}`));
   window.scrollTo(0, 0);
 }
 
