@@ -26,7 +26,7 @@ export default {
     fonteJuros: "veículos, set/2026",
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
-    // EXEMPLO: parte da carta que pode virar lance embutido. Use 0 se o grupo não permitir.
+    // Gestor: lance embutido de até 25% da carta no carro.
     lanceEmbutidoMax: 0.25,
     // REFERÊNCIA: cartas vistas em posts de 2026. O site indica a menor carta que cobre o valor do carro.
     cartas: [80000, 90000, 100000, 125000, 150000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000],
@@ -42,8 +42,8 @@ export default {
     fonteJuros: "imobiliário, set/2026",
     // Confirme com o gestor quantas assembleias o grupo tem por ano.
     assembleiasPorAno: 12,
-    // EXEMPLO: parte da carta que pode virar lance embutido. Use 0 se o grupo não permitir.
-    lanceEmbutidoMax: 0.25,
+    // Gestor: lance embutido de até 20% da carta no imóvel.
+    lanceEmbutidoMax: 0.2,
     // EXEMPLO: estimativa de alta anual do preço do imóvel.
     altaAnual: 0.06,
     // Gestor: imóvel começa na carta de R$ 100 mil e vai até R$ 1 milhão, de 50 em 50 mil.
