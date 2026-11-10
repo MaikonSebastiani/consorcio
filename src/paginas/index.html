@@ -15,7 +15,7 @@
   .produto h2 { font-size: 1.6rem; margin: 8px 0; }
   .produto .acao { display: block; color: var(--ouro-claro); font-weight: 800; margin-top: 18px; }
   .cta-final a { display: inline-block; color: #1a1710; font-weight: 800; margin: 12px 12px 0; }
-  .produto-img { display: block; width: calc(100% + 40px); height: 150px; margin: -20px -20px 18px; object-fit: cover; object-position: right center; border-radius: 14px 14px 0 0; opacity: .9; }
+  .produto-img { display: block; width: calc(100% + 40px); height: auto; aspect-ratio: 2 / 1; margin: -20px -20px 18px; object-fit: cover; object-position: center; border-radius: 14px 14px 0 0; opacity: .9; }
   @media (max-width: 720px) { .opcoes { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -31,14 +31,14 @@
   <p class="suave">Escolha o objetivo e veja sua parcela e sua estratégia de lance em 60 segundos.</p>
   <div class="opcoes">
     <a class="cartao produto" href="/veiculo">
-      <img class="produto-img" src="/img/hero-veiculo-celular.webp" alt="" width="1208" height="680" decoding="async">
+      <img class="produto-img" src="/img/card-veiculo-600.webp" srcset="/img/card-veiculo-600.webp 600w, /img/card-veiculo-1000.webp 1000w" sizes="(max-width: 720px) 100vw, 540px" alt="" width="1000" height="500" decoding="async">
       <span class="sobretitulo">Veículo</span>
       <h2>Carro, moto, caminhão ou utilitário</h2>
       <p class="suave">Parcela, economia e estratégia de lance.</p>
       <span class="acao">Simular veículo →</span>
     </a>
     <a class="cartao produto" href="/imovel">
-      <img class="produto-img" src="/img/hero-imovel-celular.webp" alt="" width="1208" height="680" decoding="async">
+      <img class="produto-img" src="/img/card-imovel-600.webp" srcset="/img/card-imovel-600.webp 600w, /img/card-imovel-1000.webp 1000w" sizes="(max-width: 720px) 100vw, 540px" alt="" width="1000" height="500" decoding="async">
       <span class="sobretitulo">Imóvel</span>
       <h2>Sair do aluguel ou investir</h2>
       <p class="suave">Quanto cabe no mês e quanto a espera custa.</p>
